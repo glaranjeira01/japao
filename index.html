@@ -132,6 +132,12 @@ a{color:inherit}
 .cal .cell.done-all .d::after{content:" ✓";color:var(--accent);font-size:13px}
 .cal .cell.today{outline:2px solid var(--amber);outline-offset:1px}
 .cal .cell.trip{background:var(--paper)}
+.cal .cell .bag{position:absolute;top:3px;right:2px;width:15px;height:15px;border-radius:4px;background:var(--amber);color:#111418;display:flex;align-items:center;justify-content:center}
+.cal .cell .bag svg{width:11px;height:11px}
+.cal .legend .lg-bag b{width:17px;height:17px;border-radius:5px;background:var(--amber);color:#111418;display:inline-flex;align-items:center;justify-content:center}
+.cal .legend .lg-bag svg{width:12px;height:12px}
+.bagnote{display:flex;gap:8px;align-items:center;margin:12px 0 0;padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--amber) 18%,var(--bg));font-size:14px;color:var(--ink);font-weight:500}
+.bagnote svg{width:18px;height:18px;flex:0 0 auto}
 .cal .legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px;font-size:12px;color:var(--ink-2)}
 .cal .legend span{display:inline-flex;align-items:center;gap:5px}
 .cal .legend i{width:14px;height:5px;border-radius:3px;background:var(--lc);display:inline-block}
@@ -270,6 +276,9 @@ const LINE = ["#0B7A4B","#C8361F","#2E6FD8","#E08A00","#7A4BC2"];
 const CITY = ["Tóquio","Hakone","Quioto","Quioto","Ara\u00adshi\u00adyama","Nara","Hiro\u00adshima","Hiro\u00adshima","Miya\u00adjima","Oka\u00adyama","Ghibli Park","Taka\u00adyama","Shira\u00adkawa","Kana\u00adzawa","Ueno","Kama\u00adkura","Shi\u00adbuya","Asa\u00adkusa","Ginza","Odaiba"];
 const CITY_FULL = ["Tóquio","Hakone","Quioto","Quioto","Arashiyama","Nara","Quioto → Hiroshima","Hiroshima","Miyajima","Okayama e Kurashiki → Nagoya","Ghibli Park","Takayama","Shirakawa-gō","Kanazawa → Tóquio","Ueno e Ginza","Kamakura e Enoshima","Harajuku e Shibuya","Asakusa e Ikebukuro","Ginza e Akihabara","Odaiba"];
 const START = new Date(2027, 0, 6);
+const BAG_DAYS = new Set([6,8,9,10,11,12,15,16,17,20,21,22,23,24,25]);
+const ICON_BAG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M9 7V4.5h6V7M9 11v5M15 11v5M8 20v1.5M16 20v1.5"/></svg>';
+function hasBags(n){ return BAG_DAYS.has(dateOf(n).getDate()); }
 const DOW = ["dom","seg","ter","qua","qui","sex","sáb"];
 function dateOf(n){ const d = new Date(START); d.setDate(d.getDate()+n-1); return d; }
 function fmtDate(n){ const d = dateOf(n); return DOW[d.getDay()]+", "+d.getDate()+" de janeiro"; }
@@ -387,7 +396,7 @@ function renderCalendar(){
     if (n >= 1 && n <= 20){
       const [done,total] = countDone(n,0); const r = regionOf(n);
       const isToday = today.getTime() === dateOf(n).getTime();
-      h += '<button class="cell'+(done && done===total?' done-all':'')+(isToday?' today':'')+'" type="button" data-day="'+n+'" style="--lc:'+LINE[r]+'" aria-label="'+fmtDate(n)+', dia '+n+': '+esc(CITY_FULL[n-1])+'"><span class="d">'+dm+'</span><span class="dn">Dia '+n+'</span><span class="c">'+esc(CITY[n-1])+'</span><span class="ln" aria-hidden="true"></span></button>';
+      h += '<button class="cell'+(done && done===total?' done-all':'')+(isToday?' today':'')+'" type="button" data-day="'+n+'" style="--lc:'+LINE[r]+'" aria-label="'+fmtDate(n)+', dia '+n+': '+esc(CITY_FULL[n-1])+(BAG_DAYS.has(dm)?', com as malas grandes':'')+'"><span class="d">'+dm+'</span>'+(BAG_DAYS.has(dm)?'<span class="bag" aria-hidden="true">'+ICON_BAG+'</span>':'')+'<span class="dn">Dia '+n+'</span><span class="c">'+esc(CITY[n-1])+'</span><span class="ln" aria-hidden="true"></span></button>';
     } else if (dm === 5){
       h += '<div class="cell trip"><span class="d">5</span><span class="dn">Noite</span><span class="c">Che­gada</span></div>';
     } else if (dm === 26){
@@ -396,7 +405,7 @@ function renderCalendar(){
       h += '<div class="cell off" aria-hidden="true"><span class="d">'+dm+'</span></div>';
     }
   }
-  h += '</div><div class="legend">' + REGIONS.map(([a,b,l],i) => '<span style="--lc:'+LINE[i]+'"><i></i>'+esc(l)+'</span>').join('') + '</div></section>';
+  h += '</div><div class="legend">' + REGIONS.map(([a,b,l],i) => '<span style="--lc:'+LINE[i]+'"><i></i>'+esc(l)+'</span>').join('') + '<span class="lg-bag"><b>'+ICON_BAG+'</b>Com as malas grandes</span></div></section>';
   return h;
 }
 const MEDIA = "jp-media-v1";
@@ -517,7 +526,8 @@ function renderDay(){
   const p = ps[cur.v].plan;
   const [done,total] = countDone(n,cur.v);
   let h = '<section class="day-head"><div class="big" aria-hidden="true"><small>DIA</small><span>'+String(n).padStart(2,"0")+'</span></div><div><p class="of">Dia '+n+' de 20 · '+fmtDate(n)+'</p><h2>'+esc(p.title)+'</h2></div></section>'
-    + '<p class="summary">'+esc(p.summary)+'</p>';
+    + '<p class="summary">'+esc(p.summary)+'</p>'
+    + (hasBags(n) ? '<p class="bagnote">'+ICON_BAG+'Dia com as malas grandes</p>' : '');
   if (ps.length > 1){
     h += '<div class="tabs" role="tablist" aria-label="Versões do dia">';
     ps.forEach((x,i) => { h += '<button class="tab" role="tab" type="button" data-v="'+i+'" aria-selected="'+(i===cur.v)+'">'+esc(x.label)+'</button>'; });
