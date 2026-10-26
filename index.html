@@ -76,6 +76,45 @@ a{color:inherit}
 .bar{display:block;height:4px;border-radius:4px;background:var(--paper-2);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--accent);width:0}
 
+.clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
+.clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
+.clk .t{font-family:'DotGothic16',monospace;font-size:30px;line-height:1.1;color:#FFB020;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.clk .t small{font-size:16px}
+.clk .d{font-size:12px;color:#C3CAD2}
+.clkdiff{grid-column:1/-1;font-size:12px;color:var(--muted);text-align:center;margin:2px 0 0}
+.calc{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);display:flex;flex-direction:column;gap:12px}
+.calc h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase}
+.calc .rate{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:var(--ink-2)}
+.calc .rate b{color:var(--ink)}
+.calc .lnk{border:0;background:none;color:var(--accent);font:inherit;font-size:13px;font-weight:700;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.calc .pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.calc .pair label{min-width:0}
+.calc label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:500}
+.calc .inp{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:0 10px;min-height:48px}
+.calc .inp span{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:var(--muted);margin-right:6px}
+.calc .inp input{flex:1;min-width:0;width:100%;border:0;background:transparent;color:var(--ink);font:inherit;font-size:20px;font-weight:700;padding:8px 0;outline:none;font-variant-numeric:tabular-nums}
+.calc .inp:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.calc .quick{display:flex;flex-wrap:wrap;gap:6px}
+.calc .quick button,.calc .sm{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;min-height:34px}
+.calc .iof{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2);flex-direction:row}
+.calc .iof input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent)}
+.calc .iof input[type=number]{width:62px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font:inherit;font-size:14px;padding:4px 6px}
+.calc .add{display:flex;gap:8px}
+.calc .add input{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:inherit;font-size:15px;padding:10px}
+.calc .rateedit{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-2)}
+.calc .rateedit input{width:110px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font:inherit;font-size:14px;padding:6px 8px}
+.exp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.exp li{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.exp .ds{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exp .ds small{display:block;color:var(--muted);font-size:11px}
+.exp .vl{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.exp .vl small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+.exp .del{border:0;background:none;color:var(--muted);width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.exp .del svg{width:16px;height:16px}
+.tot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);padding-top:8px;font-weight:700}
+.tot .r{font-family:'Barlow Condensed',sans-serif;font-size:24px;color:var(--accent)}
+.calc .note{font-size:12px;color:var(--muted);margin:0}
 .cal{margin-top:20px}
 .cal .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
 .cal h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.04em;text-transform:uppercase}
@@ -235,6 +274,110 @@ const DOW = ["dom","seg","ter","qua","qui","sex","sáb"];
 function dateOf(n){ const d = new Date(START); d.setDate(d.getDate()+n-1); return d; }
 function fmtDate(n){ const d = dateOf(n); return DOW[d.getDay()]+", "+d.getDate()+" de janeiro"; }
 function regionOf(n){ return REGIONS.findIndex(([a,b]) => n>=a && n<=b); }
+
+/* ---------- relógios ---------- */
+function renderClocks(){
+  return '<section class="clocks" aria-label="Horário no Brasil e no Japão">'
+    + '<div class="clk"><span class="w">Brasil</span><span class="t" id="ckBR">--:--</span><span class="d" id="cdBR"></span></div>'
+    + '<div class="clk"><span class="w">Japão</span><span class="t" id="ckJP">--:--</span><span class="d" id="cdJP"></span></div>'
+    + '<p class="clkdiff" id="ckDiff"></p></section>';
+}
+function tzParts(tz){
+  const f = new Intl.DateTimeFormat("pt-BR", {timeZone: tz, hour:"2-digit", minute:"2-digit", second:"2-digit", weekday:"short", day:"2-digit", month:"short", hour12:false});
+  const o = {}; f.formatToParts(new Date()).forEach(p => o[p.type] = p.value); return o;
+}
+function tzOffsetMin(tz){
+  const d = new Date(); const s = d.toLocaleString("en-US", {timeZone: tz}); return Math.round((new Date(s) - new Date(d.toLocaleString("en-US", {timeZone:"UTC"})))/60000);
+}
+function tickClocks(){
+  const br = document.getElementById("ckBR"); if (!br) return;
+  [["America/Sao_Paulo","BR"],["Asia/Tokyo","JP"]].forEach(([tz,id]) => {
+    const o = tzParts(tz);
+    document.getElementById("ck"+id).innerHTML = o.hour+":"+o.minute+"<small>:"+o.second+"</small>";
+    document.getElementById("cd"+id).textContent = (o.weekday||"").replace(".","")+", "+o.day+" "+(o.month||"").replace(".","");
+  });
+  const diff = (tzOffsetMin("Asia/Tokyo") - tzOffsetMin("America/Sao_Paulo"))/60;
+  document.getElementById("ckDiff").textContent = "O Japão está "+diff+" horas à frente do Brasil.";
+}
+setInterval(tickClocks, 1000);
+
+/* ---------- conversor e gastos ---------- */
+const RATE_FALLBACK = {v: 0.0349, d: "2026-10-26"};
+let calc = {rate: RATE_FALLBACK.v, rateDate: RATE_FALLBACK.d, manual: false, iof: true, iofPct: 3.5, items: []};
+try { const c = JSON.parse(localStorage.getItem("jp-calc")||"null"); if (c) calc = Object.assign(calc, c); } catch(e) {}
+function saveCalc(){ try { localStorage.setItem("jp-calc", JSON.stringify(calc)); } catch(e) {} }
+const fmtBRL = v => v.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const fmtJPY = v => "¥ " + Math.round(v).toLocaleString("pt-BR");
+function parseNum(str){ if (!str) return 0; const t = String(str).replace(/[^\d,.\-]/g,"").replace(/\./g,"").replace(",","."); const n = parseFloat(t); return isFinite(n) ? n : 0; }
+function factor(){ return calc.rate * (calc.iof ? 1 + calc.iofPct/100 : 1); }
+function fmtDay(iso){ const [y,m,d] = iso.split("-"); return d+"/"+m; }
+function renderCalc(){
+  const items = calc.items.map((it,i) => '<li><span class="ds">'+(esc(it.t)||"Gasto")+'<small>'+esc(it.when)+'</small></span><span class="vl">'+fmtBRL(it.brl)+'<small>'+fmtJPY(it.jpy)+'</small></span><button class="del" type="button" data-del="'+i+'" aria-label="Apagar gasto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li>').join("");
+  const tj = calc.items.reduce((a,b)=>a+b.jpy,0), tb = calc.items.reduce((a,b)=>a+b.brl,0);
+  return '<section class="calc" aria-labelledby="calcT"><h2 id="calcT">Conversor de ienes</h2>'
+    + '<div class="rate"><span>1 ¥ = <b id="rateTxt">'+calc.rate.toLocaleString("pt-BR",{minimumFractionDigits:4, maximumFractionDigits:4})+'</b> R$ · <span id="rateDate">'+(calc.manual?'cotação manual':'cotação de '+fmtDay(calc.rateDate))+'</span></span><button class="lnk" type="button" id="rateUpd">Atualizar</button><button class="lnk" type="button" id="rateEdit">Ajustar</button></div>'
+    + '<div class="rateedit" id="rateBox" hidden><label style="flex-direction:row;align-items:center;gap:8px;font-size:13px">R$ por 1 ¥ <input id="rateIn" inputmode="decimal" value="'+calc.rate.toString().replace(".",",")+'"></label><button class="sm" type="button" id="rateSave">Salvar</button></div>'
+    + '<div class="pair"><label>Ienes<span class="inp"><span>¥</span><input id="inJPY" inputmode="numeric" placeholder="0" autocomplete="off"></span></label><label>Reais<span class="inp"><span>R$</span><input id="inBRL" inputmode="decimal" placeholder="0,00" autocomplete="off"></span></label></div>'
+    + '<div class="quick">'+[500,1000,3000,5000,10000].map(v => '<button type="button" data-q="'+v+'">'+fmtJPY(v)+'</button>').join("")+'</div>'
+    + '<label class="iof"><input type="checkbox" id="iofOn"'+(calc.iof?' checked':'')+'> Somar IOF do cartão <input type="number" id="iofPct" step="0.01" min="0" value="'+calc.iofPct+'" aria-label="Percentual de IOF">%</label>'
+    + '<div class="add"><input id="expT" placeholder="Descrição (opcional): ramen, Pokémon…" maxlength="60" autocomplete="off"><button class="btn" type="button" id="expAdd">Adicionar</button></div>'
+    + (calc.items.length ? '<ul class="exp">'+items+'</ul><div class="tot"><span>'+fmtJPY(tj)+'</span><span class="r">'+fmtBRL(tb)+'</span></div><button class="lnk" type="button" id="expClear" style="align-self:flex-start">Apagar todos os gastos</button>' : '<p class="note">Os gastos adicionados aparecem aqui, com o total em ienes e em reais.</p>')
+    + '<p class="note">A cotação vem do Banco Central Europeu e é atualizada uma vez por dia útil; o valor cobrado no cartão pode variar um pouco. Os gastos ficam salvos só neste aparelho.</p></section>';
+}
+function syncFrom(src){
+  const j = document.getElementById("inJPY"), b = document.getElementById("inBRL"); if (!j) return;
+  if (src === "jpy"){ const v = parseNum(j.value); b.value = v ? (v*factor()).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2}) : ""; }
+  else { const v = parseNum(b.value); j.value = v ? Math.round(v/factor()).toLocaleString("pt-BR") : ""; }
+}
+async function fetchRate(manualClick){
+  if (calc.manual && !manualClick) return;
+  const el = document.getElementById("rateDate");
+  if (manualClick && el) el.textContent = "atualizando…";
+  const tries = [
+    ["https://api.frankfurter.dev/v1/latest?base=JPY&symbols=BRL", j => [j.rates.BRL, j.date]],
+    ["https://api.frankfurter.app/latest?from=JPY&to=BRL", j => [j.rates.BRL, j.date]],
+    ["https://open.er-api.com/v6/latest/JPY", j => [j.rates.BRL, new Date(j.time_last_update_unix*1000).toISOString().slice(0,10)]]
+  ];
+  for (const [u,f] of tries){
+    try { const r = await fetch(u); if (!r.ok) continue; const [v,d] = f(await r.json());
+      if (v > 0.001 && v < 1){ calc.rate = v; calc.rateDate = d; calc.manual = false; saveCalc(); break; } } catch(e) {}
+  }
+  if (document.getElementById("rateTxt")){
+    document.getElementById("rateTxt").textContent = calc.rate.toLocaleString("pt-BR",{minimumFractionDigits:4, maximumFractionDigits:4});
+    document.getElementById("rateDate").textContent = calc.manual ? "cotação manual" : "cotação de "+fmtDay(calc.rateDate) + (navigator.onLine ? "" : " (sem internet)");
+    syncFrom("jpy");
+  }
+}
+let clearArm = false;
+document.addEventListener("input", e => {
+  if (e.target.id === "inJPY") syncFrom("jpy");
+  else if (e.target.id === "inBRL") syncFrom("brl");
+  else if (e.target.id === "iofPct"){ calc.iofPct = Math.max(0, parseFloat(e.target.value)||0); saveCalc(); syncFrom("jpy"); }
+});
+document.addEventListener("change", e => { if (e.target.id === "iofOn"){ calc.iof = e.target.checked; saveCalc(); syncFrom("jpy"); } });
+function calcClick(e){
+  const q = e.target.closest("[data-q]"); if (q){ document.getElementById("inJPY").value = (+q.dataset.q).toLocaleString("pt-BR"); syncFrom("jpy"); return true; }
+  if (e.target.closest("#rateUpd")){ fetchRate(true); return true; }
+  if (e.target.closest("#rateEdit")){ const b = document.getElementById("rateBox"); b.hidden = !b.hidden; return true; }
+  if (e.target.closest("#rateSave")){ const v = parseNum(document.getElementById("rateIn").value.replace(/\./g,",")); if (v > 0){ calc.rate = v; calc.manual = true; saveCalc(); renderOverview(); } return true; }
+  if (e.target.closest("#expAdd")){
+    const jpy = parseNum(document.getElementById("inJPY").value); if (!jpy) { document.getElementById("inJPY").focus(); return true; }
+    const now = new Date(); const tj = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
+    const n = Math.floor((new Date(tj.getFullYear(), tj.getMonth(), tj.getDate()) - START)/86400000) + 1;
+    const when = (n>=1 && n<=20 ? "Dia "+n+" · " : "") + tj.toLocaleDateString("pt-BR",{day:"2-digit", month:"2-digit"});
+    calc.items.unshift({t: document.getElementById("expT").value.trim(), jpy, brl: jpy*factor(), when}); saveCalc(); renderOverview();
+    setTimeout(() => { const c = document.querySelector(".calc"); if (c) c.scrollIntoView({block:"start"}); }, 0);
+    return true;
+  }
+  const del = e.target.closest("[data-del]"); if (del){ calc.items.splice(+del.dataset.del,1); saveCalc(); renderOverview(); setTimeout(() => { const c = document.querySelector(".calc"); if (c) c.scrollIntoView({block:"start"}); }, 0); return true; }
+  if (e.target.closest("#expClear")){
+    const b = e.target.closest("#expClear");
+    if (!clearArm){ clearArm = true; b.textContent = "Toque de novo para apagar tudo"; setTimeout(() => { clearArm = false; if (document.body.contains(b)) b.textContent = "Apagar todos os gastos"; }, 4000); return true; }
+    clearArm = false; calc.items = []; saveCalc(); renderOverview(); return true;
+  }
+  return false;
+}
+
 function renderCalendar(){
   const today = new Date(); today.setHours(0,0,0,0);
   let h = '<section class="cal" aria-labelledby="calT"><div class="head"><h2 id="calT">Janeiro</h2><span class="yr">2027</span></div><div class="wk">';
@@ -350,7 +493,7 @@ function renderChips(){
 }
 
 function renderOverview(){
-  let h = renderCalendar() + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
+  let h = renderClocks() + renderCalendar() + renderCalc() + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
     + '<div><button class="btn" id="offBtn" type="button">'+ICON_DL+'Baixar para usar offline</button></div>'
     + '<span class="bar" id="offBar" hidden><i></i></span><div class="status" id="offStatus"></div></section>';
   REGIONS.forEach(([a,b,label]) => {
@@ -365,6 +508,7 @@ function renderOverview(){
   });
   document.getElementById("app").innerHTML = h;
   offlineStatus();
+  tickClocks();
 }
 
 function renderDay(){
@@ -500,6 +644,7 @@ async function downloadAll(){
 }
 
 document.addEventListener("click", e => {
+  if (calcClick(e)) return;
   if (e.target.closest("#offBtn")){ downloadAll(); return; }
   if (!document.getElementById("tx").hidden){ document.getElementById("tx").hidden = true; document.body.style.overflow = ""; return; }
   const jb = e.target.closest("[data-ja]"); if (jb){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+jb.dataset.ja]; document.getElementById("txN").textContent = st.ja[0]; document.getElementById("txA").textContent = st.ja[1]; document.getElementById("tx").hidden = false; document.body.style.overflow = "hidden"; return; }
@@ -522,6 +667,7 @@ window.addEventListener("online", net); window.addEventListener("offline", net);
 
 if ("serviceWorker" in navigator && location.protocol === "https:") { navigator.serviceWorker.register("sw.js").catch(()=>{}); }
 window.addEventListener("hashchange", () => { fromHash(); render(); });
+fetchRate(false);
 fromHash(); render();
 </script>
 </body>
