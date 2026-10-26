@@ -76,6 +76,26 @@ a{color:inherit}
 .bar{display:block;height:4px;border-radius:4px;background:var(--paper-2);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--accent);width:0}
 
+.cal{margin-top:20px}
+.cal .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.cal h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.04em;text-transform:uppercase}
+.cal .yr{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;color:var(--muted);letter-spacing:.1em}
+.cal .wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal .dow{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--muted);text-align:center;padding:2px 0 4px;letter-spacing:.06em}
+.cal .cell{position:relative;min-height:66px;border-radius:8px;background:var(--paper);border:1px solid transparent;padding:4px 4px 8px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;font:inherit;color:inherit;overflow:hidden;min-width:0}
+.cal .cell.off{background:transparent;color:var(--muted);opacity:.45}
+.cal button.cell{cursor:pointer;border-color:var(--line);background:var(--bg)}
+.cal button.cell:hover{background:var(--paper)}
+.cal .cell .d{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;line-height:1}
+.cal .cell .dn{font-size:10px;color:var(--muted);line-height:1.2;margin-top:1px}
+.cal .cell .c{font-size:10.5px;font-weight:700;line-height:1.15;margin-top:3px;width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow-wrap:normal;word-break:normal;hyphens:manual}
+.cal .cell .ln{position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--lc)}
+.cal .cell.done-all .d::after{content:" ✓";color:var(--accent);font-size:13px}
+.cal .cell.today{outline:2px solid var(--amber);outline-offset:1px}
+.cal .cell.trip{background:var(--paper)}
+.cal .legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px;font-size:12px;color:var(--ink-2)}
+.cal .legend span{display:inline-flex;align-items:center;gap:5px}
+.cal .legend i{width:14px;height:5px;border-radius:3px;background:var(--lc);display:inline-block}
 .offline{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--paper);display:flex;flex-direction:column;gap:10px}
 .offline .h{display:flex;gap:12px;align-items:flex-start}
 .offline .ic{width:40px;height:40px;flex:0 0 auto;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center}
@@ -196,6 +216,35 @@ const DATA = [{"n": 1, "main": {"title": "Tóquio · Shiba, jardins e luzes", "s
 const WIKI = {"teamLab Borderless": ["TeamLab Borderless", "Azabudai Hills"], "Santuário Nishikubo Hachiman": ["Nishikubo Hachiman Shrine", "Hachiman shrine"], "Templo Zōjō-ji": ["Zōjō-ji"], "Torre de Tóquio": ["Tokyo Tower"], "Jardim Kyū-Shiba-rikyū": ["Kyu-Shiba-rikyu Garden", "Kyū-Shiba-rikyū Gardens"], "Jardim Hama-rikyū": ["Hama Rikyu Gardens", "Hama-rikyū Gardens"], "Sushizanmai Honjin (Tsukiji)": ["Tsukiji Outer Market", "Tsukiji fish market"], "Monotrilho de Hamamatsuchō": ["Tokyo Monorail"], "Tokyo Mega Illumi": ["Ōi Racecourse", "Oi Racecourse"], "Templo Sengaku-ji": ["Sengaku-ji"], "Metrô até Daimon": ["Daimon Station", "Zōjō-ji"], "Jantar em Hamamatsuchō": ["Hamamatsuchō Station"], "Estação de Odawara": ["Odawara Station"], "Torii da Paz": ["Hakone Shrine"], "Bakery & Table Hakone": ["Lake Ashi"], "Barco pirata": ["Lake Ashi"], "Teleférico Tōgendai": ["Hakone Ropeway"], "Vale de Ōwakudani": ["Ōwakudani"], "Teleférico até Sōunzan": ["Hakone Tozan Cable Car", "Hakone Ropeway"], "Hakone Open-Air Museum": ["Hakone Open-Air Museum"], "Estação Gōra": ["Gōra Station"], "Odawara → Hakone-Yumoto": ["Hakone-Yumoto Station"], "Trem Hakone Tozan": ["Hakone Tozan Line"], "Ônibus até Moto-Hakone": ["Hakone, Kanagawa"], "Barco no lago Ashi": ["Lake Ashi"], "Hakone Sekisho": ["Hakone Checkpoint", "Hakone Sekisho"], "Ônibus para Odawara": ["Tōkaidō (road)"], "Castelo de Odawara": ["Odawara Castle"], "Mercado Nishiki": ["Nishiki Market"], "Ginkaku-ji": ["Ginkaku-ji"], "Caminho do Filósofo": ["Philosopher's Walk"], "Hōnen-in": ["Hōnen-in"], "Garyūrō (Eikandō)": ["Eikan-dō Zenrin-ji", "Zenrin-ji"], "Tenju-an": ["Tenju-an", "Nanzen-ji"], "Kiyomizu-dera": ["Kiyomizu-dera"], "Sannenzaka e Ninenzaka": ["Sannenzaka", "Ninenzaka", "Higashiyama-ku, Kyoto"], "Pagode Yasaka": ["Hōkan-ji", "Yasaka Pagoda"], "Ryōzen Kannon": ["Ryōzen Kannon"], "Kōdai-ji": ["Kōdai-ji"], "Santuário Yasaka": ["Yasaka Shrine"], "Santuário Shimogamo": ["Shimogamo Shrine"], "Delta do rio Kamo": ["Kamo River"], "Trem Keihan até Gion": ["Keihan Main Line", "Keihan Electric Railway"], "Gion Shirakawa": ["Gion"], "Bambuzal e Togetsukyō": ["Sagano Bamboo Forest", "Togetsukyō", "Arashiyama"], "Tenryū-ji": ["Tenryū-ji"], "Otagi Nenbutsu-ji": ["Otagi Nenbutsu-ji"], "Adashino Nenbutsu-ji": ["Adashino Nenbutsu-ji"], "Rua Saga-Toriimoto": ["Saga-Toriimoto", "Atago Shrine (Kyoto)", "Arashiyama"], "Giō-ji": ["Giō-ji"], "Nison-in e Jōjakkō-ji": ["Nison-in", "Jōjakkō-ji"], "Compras perto do hotel": ["Teramachi Street", "Shinkyogoku"], "Viela Pontochō": ["Pontochō"], "Burger Revolution": ["Wagyu"], "Portão Nandaimon": ["Nandaimon (Tōdai-ji)", "Tōdai-ji"], "Tōdai-ji": ["Tōdai-ji"], "Nigatsu-dō": ["Nigatsu-dō"], "Kasuga Taisha": ["Kasuga-taisha"], "Museu Nacional de Nara": ["Nara National Museum"], "Tōkon-dō": ["Kōfuku-ji"], "Tesouro do Kōfuku-ji": ["Ashura (Kōfuku-ji)", "Kōfuku-ji"], "Naramachi": ["Naramachi"], "Volta a Quioto": ["Kintetsu Kyoto Line"], "MOTOI Gyoza": ["Jiaozi"], "Fushimi Inari Taisha": ["Fushimi Inari-taisha"], "Sanjūsangen-dō": ["Sanjūsangen-dō"], "teamLab Biovortex": ["TeamLab", "Kyoto Station"], "Estação de Quioto": ["Kyoto Station"], "Museu Ferroviário": ["Kyoto Railway Museum"], "Shinkansen para Hiroshima": ["Sanyō Shinkansen"], "Check-in em Hiroshima": ["Hiroshima"], "Museu Memorial da Paz": ["Hiroshima Peace Memorial Museum"], "Chama da Paz": ["Hiroshima Peace Memorial Park"], "Domo da Bomba Atômica": ["Hiroshima Peace Memorial"], "Monumento do Hipocentro": ["Shima Hospital", "Hiroshima Peace Memorial"], "Okonomiyaki Micchan": ["Okonomiyaki"], "Terraço da Orizuru Tower": ["Orizuru Tower", "Sadako Sasaki"], "Jardim Shukkei-en": ["Shukkei-en"], "Castelo de Hiroshima": ["Hiroshima Castle"], "Hondōri": ["Hondōri", "Hiroshima"], "Píer Motoyasu": ["Motoyasu River", "Hiroshima Peace Memorial Park"], "Rua Omotesandō": ["Itsukushima"], "Santuário Itsukushima": ["Itsukushima Shrine"], "Senjōkaku": ["Toyokuni Shrine (Hiroshima)", "Itsukushima"], "Almoço de anago-meshi": ["Conger", "Itsukushima"], "Teleférico de Miyajima": ["Mount Misen"], "Templo Daishō-in": ["Daishō-in"], "Píer de Miyajima": ["Miyajimaguchi Station", "Itsukushima"], "Estação de Hiroshima": ["Hiroshima Station"], "Bonde até Shiroshita": ["Okayama Electric Tramway"], "Castelo de Okayama": ["Okayama Castle"], "Jardim Kōraku-en": ["Kōraku-en"], "Almoço na estação": ["Okayama Station"], "Trem para Kurashiki": ["Kurashiki Station", "Kurashiki"], "Bairro Bikan": ["Kurashiki"], "Museu Ōhara": ["Ohara Museum of Art"], "Kurashiki Ivy Square": ["Kurashiki Ivy Square", "Kurashiki"], "Shinkansen para Nagoya": ["Nagoya Station"], "Elevator Tower": ["Ghibli Park", "Expo 2005 Aichi Commemorative Park"], "Ghibli Park": ["Ghibli Park", "Expo 2005 Aichi Commemorative Park"], "Volta a Nagoya": ["Linimo"], "Sakurayama Hachimangū": ["Sakurayama Hachiman Shrine", "Takayama Festival"], "Hida Kotte Ushi": ["Hida beef"], "Destilaria Harada": ["Sake"], "Sanmachi-suji": ["Sanmachi Suji", "Takayama, Gifu"], "Museu Shōwa-kan": ["Takayama, Gifu"], "Takayama Jinya": ["Takayama Jin'ya", "Takayama Jinya"], "Mercado matinal Miyagawa": ["Miyagawa Morning Market", "Takayama, Gifu"], "Terminal de ônibus de Takayama": ["Takayama Station"], "Mirante Ogimachi": ["Shirakawa-gō"], "Santuário Hachiman": ["Shirakawa, Gifu"], "Casa Nagase": ["Gasshō-zukuri"], "Ponte Deai": ["Shō River"], "Gasshō-zukuri Minka-en": ["Gasshō-zukuri"], "Ônibus para Takayama": ["Hida Mountains"], "Estação de Takayama": ["Takayama Station"], "Estação de Kanazawa": ["Kanazawa Station"], "Mercado Ōmichō": ["Ōmichō Market", "Omicho Market"], "Castelo de Kanazawa": ["Kanazawa Castle"], "Jardim Kenroku-en": ["Kenroku-en"], "Bairro Higashi Chaya": ["Higashi Chaya District", "Higashi Chaya"], "Pokémon Center Kanazawa": ["Kanazawa"], "Jantar na estação": ["Kanazawa Station"], "Estação de Ueno": ["Ueno Station"], "Museu de Natureza e Ciência": ["National Museum of Nature and Science"], "Museu Nacional de Tóquio": ["Tokyo National Museum"], "Tonkatsu Hajime HANARE": ["Tonkatsu"], "Ginza Karen": ["Ginza"], "Otakara @ Market Asakusa": ["Asakusa"], "Estação de Kamakura": ["Kamakura Station"], "Tsurugaoka Hachimangū": ["Tsurugaoka Hachimangū"], "Kōtoku-in": ["Kōtoku-in"], "Hase-dera": ["Hase-dera (Kamakura)"], "Estação Hase": ["Enoshima Electric Railway"], "Monumento de Enoshima": ["Enoshima"], "Torii de bronze": ["Enoshima Shrine", "Enoshima"], "Santuário Hetsumiya": ["Enoshima Shrine"], "Shōnan-Enoshima": ["Shonan Monorail"], "Estação Ōfuna": ["Ōfuna Kannon", "Ōfuna Station"], "Meiji Jingū": ["Meiji Shrine"], "Rua Takeshita": ["Takeshita Street"], "POP MART Harajuku": ["Harajuku"], "Onitsuka Tiger Omotesandō": ["Onitsuka Tiger", "Omotesandō"], "B-SIDE LABEL": ["Harajuku"], "KICKS LAB.": ["Harajuku"], "Cat Street e cruzamento": ["Shibuya Crossing"], "Shibuya Parco": ["Parco (department store)", "Shibuya"], "Loft": ["Shibuya"], "Shibuya Sky": ["Shibuya Scramble Square"], "Templo Sensō-ji": ["Sensō-ji"], "Parque Sumida": ["Asahi Beer Hall", "Sumida Park"], "Tokyo Skytree": ["Tokyo Skytree"], "Aquário Sumida": ["Sumida Aquarium"], "Pokémon Center Skytree": ["Tokyo Skytree Town", "Tokyo Skytree"], "Museu da Espada Japonesa": ["Japanese Sword Museum", "Japanese sword"], "Museu Edo-Tóquio": ["Edo-Tokyo Museum"], "Sunshine 60": ["Sunshine 60"], "gashacoco e Suruga-ya": ["Gashapon"], "BicCamera e jantar": ["Ikebukuro"], "Pokémon Center Tokyo DX": ["Nihonbashi Takashimaya", "Takashimaya"], "Almoço em Nihonbashi": ["Nihonbashi (bridge)", "Nihonbashi, Tokyo"], "Tsukiji Hongan-ji": ["Tsukiji Hongan-ji"], "Ginza Itoya": ["Ginza"], "MUJI e Apple Ginza": ["Ginza"], "Nissan Crossing": ["Nissan GT-R"], "Yodobashi Akiba": ["Akihabara"], "AmiAmi e Kotobukiya": ["Akihabara"], "Tamashii Nations Store": ["Gunpla"], "Tokyo Hobby Center": ["Akihabara"], "Mandarake Complex": ["Mandarake"], "teamLab Planets": ["TeamLab Planets", "TeamLab"], "Estátua da Liberdade": ["Statue of Liberty (Odaiba)", "Odaiba"], "Prédio da Fuji TV": ["Fuji Television Headquarters", "Fuji Television"], "DiverCity Tokyo Plaza": ["DiverCity Tokyo Plaza", "RX-78-2 Gundam"], "Miraikan": ["Miraikan"], "Small Worlds": ["Small Worlds Tokyo", "Ariake, Tokyo"], "Saída para o aeroporto": ["Haneda Airport"]};
 const SHORT = ["Tóquio","Hakone","Quioto","Quioto","Arashiyama","Nara","Inari","Hiroshima","Miyajima","Okayama","Ghibli","Takayama","Shirakawa","Kanazawa","Ueno","Kamakura","Shibuya","Asakusa","Ginza","Odaiba"];
 const REGIONS = [[1,2,"Tóquio e Hakone"],[3,7,"Quioto e Nara"],[8,9,"Hiroshima e Miyajima"],[10,14,"Okayama, Nagoya e Alpes"],[15,20,"De volta a Tóquio"]];
+const LINE = ["#0B7A4B","#C8361F","#2E6FD8","#E08A00","#7A4BC2"];
+const CITY = ["Tóquio","Hakone","Quioto","Quioto","Ara\u00adshi\u00adyama","Nara","Hiro\u00adshima","Hiro\u00adshima","Miya\u00adjima","Oka\u00adyama","Ghibli Park","Taka\u00adyama","Shira\u00adkawa","Kana\u00adzawa","Ueno","Kama\u00adkura","Shi\u00adbuya","Asa\u00adkusa","Ginza","Odaiba"];
+const CITY_FULL = ["Tóquio","Hakone","Quioto","Quioto","Arashiyama","Nara","Quioto → Hiroshima","Hiroshima","Miyajima","Okayama e Kurashiki → Nagoya","Ghibli Park","Takayama","Shirakawa-gō","Kanazawa → Tóquio","Ueno e Ginza","Kamakura e Enoshima","Harajuku e Shibuya","Asakusa e Ikebukuro","Ginza e Akihabara","Odaiba"];
+const START = new Date(2027, 0, 6);
+const DOW = ["dom","seg","ter","qua","qui","sex","sáb"];
+function dateOf(n){ const d = new Date(START); d.setDate(d.getDate()+n-1); return d; }
+function fmtDate(n){ const d = dateOf(n); return DOW[d.getDay()]+", "+d.getDate()+" de janeiro"; }
+function regionOf(n){ return REGIONS.findIndex(([a,b]) => n>=a && n<=b); }
+function renderCalendar(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  let h = '<section class="cal" aria-labelledby="calT"><div class="head"><h2 id="calT">Janeiro</h2><span class="yr">2027</span></div><div class="wk">';
+  ["D","S","T","Q","Q","S","S"].forEach(x => { h += '<div class="dow" aria-hidden="true">'+x+'</div>'; });
+  for (let dm = 3; dm <= 30; dm++){
+    const n = dm - 5;
+    if (n >= 1 && n <= 20){
+      const [done,total] = countDone(n,0); const r = regionOf(n);
+      const isToday = today.getTime() === dateOf(n).getTime();
+      h += '<button class="cell'+(done && done===total?' done-all':'')+(isToday?' today':'')+'" type="button" data-day="'+n+'" style="--lc:'+LINE[r]+'" aria-label="'+fmtDate(n)+', dia '+n+': '+esc(CITY_FULL[n-1])+'"><span class="d">'+dm+'</span><span class="dn">Dia '+n+'</span><span class="c">'+esc(CITY[n-1])+'</span><span class="ln" aria-hidden="true"></span></button>';
+    } else if (dm === 5){
+      h += '<div class="cell trip"><span class="d">5</span><span class="dn">Noite</span><span class="c">Che­gada</span></div>';
+    } else if (dm === 26){
+      h += '<div class="cell trip"><span class="d">26</span><span class="dn">Fim</span><span class="c">Volta</span></div>';
+    } else {
+      h += '<div class="cell off" aria-hidden="true"><span class="d">'+dm+'</span></div>';
+    }
+  }
+  h += '</div><div class="legend">' + REGIONS.map(([a,b,l],i) => '<span style="--lc:'+LINE[i]+'"><i></i>'+esc(l)+'</span>').join('') + '</div></section>';
+  return h;
+}
 const MEDIA = "jp-media-v1";
 
 const KEY = "jp-roteiro-v1";
@@ -288,7 +337,7 @@ function renderChips(){
 }
 
 function renderOverview(){
-  let h = '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
+  let h = renderCalendar() + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
     + '<div><button class="btn" id="offBtn" type="button">'+ICON_DL+'Baixar para usar offline</button></div>'
     + '<span class="bar" id="offBar" hidden><i></i></span><div class="status" id="offStatus"></div></section>';
   REGIONS.forEach(([a,b,label]) => {
@@ -310,7 +359,7 @@ function renderDay(){
   if (cur.v >= ps.length) cur.v = 0;
   const p = ps[cur.v].plan;
   const [done,total] = countDone(n,cur.v);
-  let h = '<section class="day-head"><div class="big" aria-hidden="true"><small>DIA</small><span>'+String(n).padStart(2,"0")+'</span></div><div><p class="of">Dia '+n+' de 20</p><h2>'+esc(p.title)+'</h2></div></section>'
+  let h = '<section class="day-head"><div class="big" aria-hidden="true"><small>DIA</small><span>'+String(n).padStart(2,"0")+'</span></div><div><p class="of">Dia '+n+' de 20 · '+fmtDate(n)+'</p><h2>'+esc(p.title)+'</h2></div></section>'
     + '<p class="summary">'+esc(p.summary)+'</p>';
   if (ps.length > 1){
     h += '<div class="tabs" role="tablist" aria-label="Versões do dia">';
