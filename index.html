@@ -68,7 +68,9 @@ a{color:inherit}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .card{background:var(--bg);border:1px solid var(--line);border-radius:10px;overflow:hidden;text-align:left;font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;padding:0;min-height:112px}
-.card:hover{background:var(--paper)}
+.card{border-color:color-mix(in srgb,var(--lc,var(--accent)) 45%,var(--line));background:color-mix(in srgb,var(--lc,var(--accent)) 14%,var(--bg));border-top:6px solid var(--lc,var(--accent))}
+.card:hover{background:color-mix(in srgb,var(--lc,var(--accent)) 24%,var(--bg))}
+.card .n{color:color-mix(in srgb,var(--lc,var(--accent)) 80%,var(--ink)) !important}
 .card .n{color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.08em;padding:10px 12px 0;text-transform:uppercase}
 .card .t{font-weight:500;font-size:15px;line-height:1.3;padding:4px 12px}
 .card .p{margin-top:auto;font-size:12px;color:var(--muted);padding:0 12px 6px}
@@ -259,6 +261,18 @@ details.pn .pbody p + p{margin-top:10px}
 .mtl button[aria-current="true"] b{color:var(--accent)}
 .evbtns{display:flex;gap:8px;flex-wrap:wrap}
 .evbtns a{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.gt{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);display:flex;flex-direction:column;gap:10px}
+.gt h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase}
+.gt textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:inherit;font-size:16px;padding:10px;resize:vertical;min-height:64px}
+.gt textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.gtb{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gtb button{min-height:44px;font-size:14px;justify-content:center}
+.gt .note{font-size:12px;color:var(--muted);margin:0}
+.yref .yl{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.yref .yl div{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;font-size:14px;border-top:1px solid var(--line)}
+.yref .yl div:first-child{border-top:0}
+.yref .yl b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.yref .note{font-size:12px;color:var(--muted);margin:8px 0 0}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -306,8 +320,8 @@ details.pn .pbody p + p{margin-top:10px}
 .cal .dow{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--muted);text-align:center;padding:2px 0 4px;letter-spacing:.06em}
 .cal .cell{position:relative;min-height:66px;border-radius:8px;background:var(--paper);border:1px solid transparent;padding:4px 4px 8px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;font:inherit;color:inherit;overflow:hidden;min-width:0}
 .cal .cell.off{background:transparent;color:var(--muted);opacity:.45}
-.cal button.cell{cursor:pointer;border-color:var(--line);background:var(--bg)}
-.cal button.cell:hover{background:var(--paper)}
+.cal button.cell{cursor:pointer;border-color:color-mix(in srgb,var(--lc) 45%,var(--line));background:color-mix(in srgb,var(--lc) 16%,var(--bg))}
+.cal button.cell:hover{background:color-mix(in srgb,var(--lc) 26%,var(--bg))}
 .cal .cell .d{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;line-height:1}
 .cal .cell .dn{font-size:10px;color:var(--muted);line-height:1.2;margin-top:1px}
 .cal .cell .c{font-size:10.5px;font-weight:700;line-height:1.15;margin-top:3px;width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow-wrap:normal;word-break:normal;hyphens:manual}
@@ -517,6 +531,10 @@ const fmtJPY = v => "¥ " + Math.round(v).toLocaleString("pt-BR");
 function parseNum(str){ if (!str) return 0; const t = String(str).replace(/[^\d,.\-]/g,"").replace(/\./g,"").replace(",","."); const n = parseFloat(t); return isFinite(n) ? n : 0; }
 function factor(){ return calc.rate * (calc.iof ? 1 + calc.iofPct/100 : 1); }
 function fmtDay(iso){ const [y,m,d] = iso.split("-"); return d+"/"+m; }
+function renderYen(){
+  document.getElementById("app").innerHTML = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>IENES</small><span>¥</span></div><div><p class="of">Câmbio e gastos</p><h2>Conversor de ienes</h2></div></section>' + renderCalc() + '<div class="yref"><h2 class="section-title">Quanto custa no Japão</h2><div class="yl">' + [["Café no konbini","¥150–250"],["Onigiri","¥150–250"],["Bebida na máquina","¥130–200"],["Ramen","¥1.000–1.500"],["Almoço simples (teishoku)","¥1.000–1.500"],["Jantar em izakaya, por pessoa","¥3.000–5.000"],["Metrô em Tóquio, trecho curto","¥180–330"],["Entrada de templo","¥300–1.000"]].map(x => '<div><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join('') + '</div><p class="note">Valores aproximados, para ter noção do preço.</p></div></div>';
+  syncFrom("jpy");
+}
 function renderCalc(){
   const items = calc.items.map((it,i) => '<li><span class="ds">'+(esc(it.t)||"Gasto")+'<small>'+esc(it.when)+'</small></span><span class="vl">'+fmtBRL(it.brl)+'<small>'+fmtJPY(it.jpy)+'</small></span><button class="del" type="button" data-del="'+i+'" aria-label="Apagar gasto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li>').join("");
   const tj = calc.items.reduce((a,b)=>a+b.jpy,0), tb = calc.items.reduce((a,b)=>a+b.brl,0);
@@ -568,21 +586,21 @@ function calcClick(e){
   const q = e.target.closest("[data-q]"); if (q){ document.getElementById("inJPY").value = (+q.dataset.q).toLocaleString("pt-BR"); syncFrom("jpy"); return true; }
   if (e.target.closest("#rateUpd")){ fetchRate(true); return true; }
   if (e.target.closest("#rateEdit")){ const b = document.getElementById("rateBox"); b.hidden = !b.hidden; return true; }
-  if (e.target.closest("#rateSave")){ const v = parseNum(document.getElementById("rateIn").value.replace(/\./g,",")); if (v > 0){ calc.rate = v; calc.manual = true; saveCalc(); renderOverview(); } return true; }
+  if (e.target.closest("#rateSave")){ const v = parseNum(document.getElementById("rateIn").value.replace(/\./g,",")); if (v > 0){ calc.rate = v; calc.manual = true; saveCalc(); render(); } return true; }
   if (e.target.closest("#expAdd")){
     const jpy = parseNum(document.getElementById("inJPY").value); if (!jpy) { document.getElementById("inJPY").focus(); return true; }
     const now = new Date(); const tj = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
     const n = Math.floor((new Date(tj.getFullYear(), tj.getMonth(), tj.getDate()) - START)/86400000) + 1;
     const when = (n>=1 && n<=20 ? "Dia "+n+" · " : "") + tj.toLocaleDateString("pt-BR",{day:"2-digit", month:"2-digit"});
-    calc.items.unshift({t: document.getElementById("expT").value.trim(), jpy, brl: jpy*factor(), when}); saveCalc(); renderOverview();
+    calc.items.unshift({t: document.getElementById("expT").value.trim(), jpy, brl: jpy*factor(), when}); saveCalc(); render();
     setTimeout(() => { const c = document.querySelector(".calc"); if (c) c.scrollIntoView({block:"start"}); }, 0);
     return true;
   }
-  const del = e.target.closest("[data-del]"); if (del){ calc.items.splice(+del.dataset.del,1); saveCalc(); renderOverview(); setTimeout(() => { const c = document.querySelector(".calc"); if (c) c.scrollIntoView({block:"start"}); }, 0); return true; }
+  const del = e.target.closest("[data-del]"); if (del){ calc.items.splice(+del.dataset.del,1); saveCalc(); render(); setTimeout(() => { const c = document.querySelector(".calc"); if (c) c.scrollIntoView({block:"start"}); }, 0); return true; }
   if (e.target.closest("#expClear")){
     const b = e.target.closest("#expClear");
     if (!clearArm){ clearArm = true; b.textContent = "Toque de novo para apagar tudo"; setTimeout(() => { clearArm = false; if (document.body.contains(b)) b.textContent = "Apagar todos os gastos"; }, 4000); return true; }
-    clearArm = false; calc.items = []; saveCalc(); renderOverview(); return true;
+    clearArm = false; calc.items = []; saveCalc(); render(); return true;
   }
   return false;
 }
@@ -733,7 +751,7 @@ let cur = {day:0, v:0};
 
 function renderChips(){
   const el = document.getElementById("chips");
-  const T = [[0,"🏠","Geral"],[-1,"💬","Guia"],[-2,"📚","Wiki"],[-4,"🚆","Trens"],[-5,"🎌","Eventos"],[-3,"🧳","Malas"]];
+  const T = [[0,"🏠","Geral"],[-6,"💴","Ienes"],[-1,"💬","Guia"],[-2,"📚","Wiki"],[-4,"🚆","Trens"],[-5,"🎌","Eventos"],[-3,"🧳","Malas"]];
   el.innerHTML = T.map(([d,ic,l]) => '<button class="tabn" type="button" data-tab="'+d+'" aria-current="'+(cur.day===d)+'"><span class="ti" aria-hidden="true">'+ic+'</span>'+l+'</button>').join('');
   const dn = document.getElementById("dtabN"); if (dn){ dn.textContent = cur.day > 0 ? String(cur.day).padStart(2,"0") : ""; dn.hidden = !(cur.day > 0); }
 }
@@ -774,14 +792,14 @@ function closeDrawer(){
 }
 
 function renderOverview(){
-  let h = renderCountdown() + renderClocks() + renderCalendar() + renderMap() + renderCalc() + '<div class="resvbox">'+resvHtml()+'</div>' + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
+  let h = renderCountdown() + renderClocks() + renderCalendar() + renderMap() + '<div class="resvbox">'+resvHtml()+'</div>' + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
     + '<div><button class="btn" id="offBtn" type="button">'+ICON_DL+'Baixar para usar offline</button></div>'
     + '<span class="bar" id="offBar" hidden><i></i></span><div class="status" id="offStatus"></div></section>';
   REGIONS.forEach(([a,b,label]) => {
     h += '<h2 class="section-title">'+esc(label)+'</h2><div class="grid">';
     for (let n=a; n<=b; n++){
       const d = DATA[n-1]; const [done,total] = countDone(n,0);
-      h += '<button class="card" type="button" data-day="'+n+'"><span class="n">Dia '+String(n).padStart(2,"0")+'</span><span class="t">'+esc(d.main.title)+'</span>'
+      h += '<button class="card" type="button" data-day="'+n+'" style="--lc:'+LINE[regionOf(n)]+'"><span class="n">Dia '+String(n).padStart(2,"0")+'</span><span class="t">'+esc(d.main.title)+'</span>'
         + '<span class="p">'+(done?done+' de '+total+' vistas':total+' paradas')+(d.variants.length?' · '+d.variants.length+' alternativa':'')+'</span>'
         + '<span class="bar" aria-hidden="true"><i style="width:'+(total?Math.round(done/total*100):0)+'%"></i></span></button>';
     }
@@ -857,18 +875,18 @@ function toggleStop(i){
   document.getElementById("progBar").style.width = (total?Math.round(done/total*100):0)+"%";
 }
 
-function render(){ renderChips(); if (cur.day===-1) renderGuide(); else if (cur.day===-2) renderWiki(); else if (cur.day===-3) renderMalas(); else if (cur.day===-4) renderTrains(); else if (cur.day===-5) renderEvents(); else if (cur.day===0) renderOverview(); else renderDay(); updateLed(); }
+function render(){ renderChips(); if (cur.day===-1) renderGuide(); else if (cur.day===-2) renderWiki(); else if (cur.day===-3) renderMalas(); else if (cur.day===-4) renderTrains(); else if (cur.day===-5) renderEvents(); else if (cur.day===-6) renderYen(); else if (cur.day===0) renderOverview(); else renderDay(); updateLed(); }
 
 function go(day, v){
   cur.day = day; cur.v = v||0;
-  const hash = day===-1 ? "#guia" : day===-2 ? "#wiki" : day===-3 ? "#malas" : day===-4 ? "#trens" : day===-5 ? "#eventos" : day ? "#dia-"+day+(cur.v?"-"+cur.v:"") : "#";
+  const hash = day===-1 ? "#guia" : day===-2 ? "#wiki" : day===-3 ? "#malas" : day===-4 ? "#trens" : day===-5 ? "#eventos" : day===-6 ? "#ienes" : day ? "#dia-"+day+(cur.v?"-"+cur.v:"") : "#";
   if (location.hash !== hash) history.replaceState(null, "", hash || " ");
   render();
   window.scrollTo({top: day ? document.querySelector(".nav").offsetTop : 0, behavior:"auto"});
 }
 function fromHash(){
   const m = location.hash.match(/^#dia-(\d+)(?:-(\d+))?$/);
-  if (m){ const n = Math.min(20, Math.max(1, +m[1])); cur.day = n; cur.v = +(m[2]||0); } else if (location.hash === "#guia"){ cur.day = -1; cur.v = 0; } else if (location.hash === "#wiki"){ cur.day = -2; cur.v = 0; } else if (location.hash === "#malas"){ cur.day = -3; cur.v = 0; } else if (location.hash === "#trens"){ cur.day = -4; cur.v = 0; } else if (location.hash === "#eventos"){ cur.day = -5; cur.v = 0; } else { cur.day = 0; cur.v = 0; }
+  if (m){ const n = Math.min(20, Math.max(1, +m[1])); cur.day = n; cur.v = +(m[2]||0); } else if (location.hash === "#guia"){ cur.day = -1; cur.v = 0; } else if (location.hash === "#wiki"){ cur.day = -2; cur.v = 0; } else if (location.hash === "#malas"){ cur.day = -3; cur.v = 0; } else if (location.hash === "#trens"){ cur.day = -4; cur.v = 0; } else if (location.hash === "#eventos"){ cur.day = -5; cur.v = 0; } else if (location.hash === "#ienes"){ cur.day = -6; cur.v = 0; } else { cur.day = 0; cur.v = 0; }
 }
 
 
@@ -992,6 +1010,7 @@ function emergHtml(){
 }
 function renderGuide(){
   let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>GUIA</small><span>JP</span></div><div><p class="of">Para consultar na viagem</p><h2>Guia de bolso</h2></div></section>';
+  h += '<section class="gt"><h2>🌐 Google Tradutor</h2><textarea id="gtIn" rows="2" placeholder="Escreva em português (ou cole um texto em japonês)"></textarea><div class="gtb"><button class="btn" type="button" data-gt="pt|ja">🇯🇵 Para japonês</button><button class="sbtn" type="button" data-gt="ja|pt">🇧🇷 Para português</button></div><p class="note">Abre no app do Google Tradutor, se estiver instalado, ou no navegador. No app, a câmera traduz placas e cardápios e o modo conversa traduz falando. Baixem o pacote offline de japonês no app antes da viagem.</p></section>';
   h += '<nav class="sub-nav" aria-label="Tópicos do guia"><button type="button" data-jump="g-fr">💬 Frases</button><button type="button" data-jump="g-menu">🈂️ Cardápio</button><button type="button" data-jump="w-food">🍜 O que provar</button><button type="button" data-jump="w-etiq">🙇 Etiqueta</button></nav>';
   h += '<h2 class="section-title" id="g-fr">Frases úteis</h2>';
   GUIDE.phrases.forEach(([g, list]) => {
@@ -1229,6 +1248,7 @@ document.addEventListener("click", e => {
   const tb = e.target.closest("[data-tab]"); if (tb){ go(+tb.dataset.tab, 0); return; }
   const jp = e.target.closest("[data-jump]"); if (jp){ const t = document.getElementById(jp.dataset.jump); if (t) window.scrollTo({top: t.getBoundingClientRect().top + window.scrollY - 110, behavior:"smooth"}); return; }
   const ct = e.target.closest("[data-city]"); if (ct){ openReader(+ct.dataset.city); return; }
+  const gt = e.target.closest("[data-gt]"); if (gt){ const [sl,tl] = gt.dataset.gt.split("|"); const t = (document.getElementById("gtIn").value||"").trim(); window.open("https://translate.google.com/?sl="+sl+"&tl="+tl+"&op=translate"+(t?"&text="+encodeURIComponent(t):""), "_blank", "noopener"); return; }
   const hb = e.target.closest("[data-hours]"); if (hb){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+hb.dataset.hours]; openPop('<h3>🕘 '+esc(st.name)+'</h3><p>'+esc(EXTRA.hours[st.name])+'</p><small>Horários de inverno; podem mudar. Confiram no site oficial antes de ir. Toque fora para fechar.</small>'); return; }
   const et = e.target.closest("[data-etiq]"); if (et){ const x = GUIDE.etiq[+et.dataset.etiq]; openPop('<h3>'+esc(x[0])+'</h3><p>'+esc(x[1])+'</p><small>Toque fora para fechar.</small>'); return; }
   const sb = e.target.closest("[data-say]"); if (sb){ say(sb.dataset.say); return; }
