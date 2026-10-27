@@ -1,4 +1,4 @@
-/* Service worker do roteiro: deixa o site, as fontes e as fotos disponíveis sem internet. */
+/* v2 · Service worker do roteiro: deixa o site, as fontes e as fotos disponíveis sem internet. */
 const SHELL = "jp-shell-v1";
 const MEDIA = "jp-media-v1";
 const SHELL_FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-180.png"];
@@ -48,7 +48,7 @@ self.addEventListener("fetch", e => {
       if (hit) return hit;
       try {
         const r = await fetch(req);
-        if (isMedia(url) && (r.ok || r.type === "opaque")) {
+        if (/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname) && (r.ok || r.type === "opaque")) {
           const c = await caches.open(MEDIA);
           c.put(req.url, r.clone()).catch(() => {});
         }
