@@ -82,7 +82,7 @@ a{color:inherit}
 .cd .num{font-family:'DotGothic16',monospace;font-size:40px;line-height:1;color:#FFB020;font-variant-numeric:tabular-nums}
 .cd .cdl{display:flex;flex-direction:column;gap:2px;font-size:14px}
 .cd .cdl b{font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:#9AA3AD}
-.cd .go{margin-left:auto;background:#FFB020;color:#111418;border:0;border-radius:8px;padding:8px 12px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:40px}
+.cd .go{margin-left:auto;white-space:nowrap;flex:none;background:#FFB020;color:#111418;border:0;border-radius:8px;padding:8px 12px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:40px}
 .led .now{font-family:'DotGothic16',monospace;font-size:18px;line-height:1.3;color:#FFB020;padding:2px 12px 0;margin:0}
 .stop.next .body::before{background:var(--amber);border-color:var(--amber)}
 .stop.next h3::after{content:"PRÓXIMA";margin-left:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.1em;background:var(--amber);color:#111418;border-radius:4px;padding:1px 6px;vertical-align:middle}
@@ -218,7 +218,14 @@ details.pn .pbody p + p{margin-top:10px}
 .mapbox text{font-family:'Noto Sans JP',system-ui,sans-serif;font-size:10.5px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}
 .mapbox .mp{cursor:pointer}
 .mapbox .mp:hover circle:nth-child(2){fill:var(--accent-soft)}
-.mapbox .mnote{margin:2px 4px 0;font-size:11px;color:var(--muted)}
+.mapbox .mnote{margin:8px 4px 0;font-size:11px;color:var(--muted)}
+.mapbox text.sd{font-size:9px;font-weight:500;fill:var(--muted)}
+.mapbox .rt-h{margin:8px 4px 6px;font-size:13px;font-weight:700;color:var(--ink)}
+.mapbox .rt-h small{font-weight:400;color:var(--muted);font-size:11.5px}
+.mapbox .rt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 2px;padding:0 2px}
+.mapbox .rt button{display:inline-flex;align-items:center;gap:5px;border:1px solid color-mix(in srgb,var(--lc) 45%,var(--line));background:color-mix(in srgb,var(--lc) 14%,var(--bg));color:var(--ink);border-radius:999px;padding:3px 9px 3px 3px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;min-height:30px}
+.mapbox .rt b{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:var(--lc);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px}
+.mapbox .rt .ra{color:var(--muted);font-weight:700;font-size:15px}
 .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
 .mk{border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:1px;background:var(--bg)}
 .mk .k{font-size:20px;font-weight:700;line-height:1.2;color:var(--ink)}
@@ -273,6 +280,25 @@ details.pn .pbody p + p{margin-top:10px}
 .yref .yl div:first-child{border-top:0}
 .yref .yl b{font-variant-numeric:tabular-nums;white-space:nowrap}
 .yref .note{font-size:12px;color:var(--muted);margin:8px 0 0}
+.miniyen{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg);display:flex;flex-direction:column;gap:10px}
+.miniyen .mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.miniyen h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:.04em}
+.miniyen .mh span{font-size:12px;color:var(--muted)}
+.miniyen .pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.miniyen label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:500;min-width:0}
+.miniyen .inp{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:0 10px;min-height:46px}
+.miniyen .inp span{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:var(--muted);margin-right:6px}
+.miniyen .inp input{flex:1;min-width:0;width:100%;border:0;background:transparent;color:var(--ink);font:inherit;font-size:19px;font-weight:700;padding:8px 0;outline:none}
+.miniyen .inp:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.miniyen .lnk{align-self:flex-start;border:0;background:none;color:var(--accent);font:inherit;font-size:13px;font-weight:700;padding:2px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.cd .tm{display:flex;gap:6px}
+.cd .tm span{display:flex;flex-direction:column;align-items:center;min-width:44px;background:#1C2128;border-radius:8px;padding:6px 4px 4px}
+.cd .tm b{font-family:'DotGothic16',monospace;font-weight:400;font-size:26px;line-height:1;color:#FFB020;font-variant-numeric:tabular-nums}
+.cd .tm small{font-size:10px;color:#9AA3AD;margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
+.cd.cdt{flex-direction:column;align-items:flex-start;gap:8px}
+.cd.cdt .cdl b{font-size:14px}
+.tp h3{font-size:20px}
+.tp .btn{width:100%;margin-top:10px;min-height:48px;font-size:16px}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -519,7 +545,7 @@ function tickClocks(){
   const diff = (tzOffsetMin("Asia/Tokyo") - tzOffsetMin("America/Sao_Paulo"))/60;
   document.getElementById("ckDiff").textContent = "O Japão está "+diff+" horas à frente do Brasil.";
 }
-setInterval(tickClocks, 1000);
+setInterval(() => { tickClocks(); tickTrip(); }, 1000);
 
 /* ---------- conversor e gastos ---------- */
 const RATE_FALLBACK = {v: 0.0349, d: "2026-10-26"};
@@ -531,6 +557,11 @@ const fmtJPY = v => "¥ " + Math.round(v).toLocaleString("pt-BR");
 function parseNum(str){ if (!str) return 0; const t = String(str).replace(/[^\d,.\-]/g,"").replace(/\./g,"").replace(",","."); const n = parseFloat(t); return isFinite(n) ? n : 0; }
 function factor(){ return calc.rate * (calc.iof ? 1 + calc.iofPct/100 : 1); }
 function fmtDay(iso){ const [y,m,d] = iso.split("-"); return d+"/"+m; }
+function renderMiniYen(){
+  return '<section class="miniyen" aria-labelledby="myT"><div class="mh"><h2 id="myT">¥ → R$</h2><span>1 ¥ = '+factor().toLocaleString("pt-BR",{minimumFractionDigits:4, maximumFractionDigits:4})+' R$'+(calc.iof?' com IOF':'')+'</span></div>'
+    + '<div class="pair"><label>Ienes<span class="inp"><span>¥</span><input id="mJPY" inputmode="numeric" placeholder="0" autocomplete="off"></span></label><label>Reais<span class="inp"><span>R$</span><input id="mBRL" inputmode="decimal" placeholder="0,00" autocomplete="off"></span></label></div>'
+    + '<button class="lnk" type="button" data-tab="-6">Conversor completo e gastos →</button></section>';
+}
 function renderYen(){
   document.getElementById("app").innerHTML = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>IENES</small><span>¥</span></div><div><p class="of">Câmbio e gastos</p><h2>Conversor de ienes</h2></div></section>' + renderCalc() + '<div class="yref"><h2 class="section-title">Quanto custa no Japão</h2><div class="yl">' + [["Café no konbini","¥150–250"],["Onigiri","¥150–250"],["Bebida na máquina","¥130–200"],["Ramen","¥1.000–1.500"],["Almoço simples (teishoku)","¥1.000–1.500"],["Jantar em izakaya, por pessoa","¥3.000–5.000"],["Metrô em Tóquio, trecho curto","¥180–330"],["Entrada de templo","¥300–1.000"]].map(x => '<div><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join('') + '</div><p class="note">Valores aproximados, para ter noção do preço.</p></div></div>';
   syncFrom("jpy");
@@ -574,6 +605,8 @@ async function fetchRate(manualClick){
 }
 let clearArm = false;
 document.addEventListener("input", e => {
+  if (e.target.id === "mJPY"){ const v = parseNum(e.target.value); document.getElementById("mBRL").value = v ? (v*factor()).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2}) : ""; return; }
+  if (e.target.id === "mBRL"){ const v = parseNum(e.target.value); document.getElementById("mJPY").value = v ? Math.round(v/factor()).toLocaleString("pt-BR") : ""; return; }
   if (e.target.id === "inJPY") syncFrom("jpy");
   else if (e.target.id === "inBRL") syncFrom("brl");
   else if (e.target.id === "iofPct"){ calc.iofPct = Math.max(0, parseFloat(e.target.value)||0); saveCalc(); syncFrom("jpy"); }
@@ -610,20 +643,36 @@ const EXTRA = {"hours": {"teamLab Borderless": "Horário varia por data (em gera
 const ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 let omiSt = lsGet("jp-omi") || {};
 const MAP_PTS = {
-  tok:[322,112,"Tóquio",1,"start",10,4], kam:[322,172,"Kamakura",16,"middle",0,20], hak:[262,150,"Hakone",2,"middle",0,22],
-  kyo:[150,140,"Quioto",3,"middle",0,-13], nar:[150,200,"Nara",6,"start",10,4], hir:[34,140,"Hiroshima",7,"middle",0,-13],
-  miy:[34,196,"Miyajima",9,"middle",0,20], oka:[92,186,"Okayama",10,"middle",0,22], nag:[214,118,"Nagoya",11,"start",11,5],
-  tak:[214,62,"Takayama",12,"start",10,4], shi:[150,62,"Shirakawa-gō",13,"middle",0,20], kan:[214,22,"Kanazawa",14,"start",10,4]
+  tok:[322,120,"Tóquio","Dias 1 e 15–20",1,"start",10,0], kam:[322,180,"Kamakura","Dia 16",16,"middle",0,20], hak:[262,158,"Hakone","Dia 2",2,"middle",0,20],
+  kyo:[150,148,"Quioto","Dias 3–7",3,"middle",0,-13], nar:[150,208,"Nara","Dia 6",6,"start",10,0], hir:[34,148,"Hiroshima","Dias 7–8",7,"middle",0,-13],
+  miy:[34,204,"Miyajima","Dia 9",9,"middle",0,20], oka:[92,194,"Okayama","Dia 10",10,"middle",0,20], nag:[214,126,"Nagoya","Dia 11",11,"start",11,0],
+  tak:[214,70,"Takayama","Dias 12–13",12,"start",10,0], shi:[150,70,"Shirakawa-gō","Dia 13",13,"middle",0,20], kan:[214,26,"Kanazawa","Dia 14",14,"end",-11,0]
 };
-const MAP_SEG = [["tok","hak",0],["hak","kyo",1],["kyo","nar",1,1],["kyo","hir",2],["hir","miy",2,1],["hir","oka",3],["oka","nag",3],["nag","tak",3],["tak","shi",3,1],["tak","kan",3],["kan","tok",4],["tok","kam",4,1]];
+const MAP_SEG = [[["tok","hak"],0],[["hak","kyo"],1],[["kyo","nar"],1,1],[["kyo","hir"],2],[["hir","miy"],2,1],[["hir","oka"],3],[["oka","nag"],3],[["nag","tak"],3],[["tak","shi"],3,1],[["tak","kan"],3],[["kan",[322,26],"tok"],4],[["tok","kam"],4,1]];
+const MAP_ROUTE = [[1,"Tóquio"],[2,"Hakone"],[3,"Quioto"],[6,"Nara"],[7,"Hiroshima"],[9,"Miyajima"],[10,"Okayama"],[11,"Nagoya"],[12,"Takayama"],[13,"Shirakawa-gō"],[14,"Kanazawa"],[15,"Tóquio"],[16,"Kamakura"],[17,"Tóquio"]];
 function renderMap(){
-  let g = '';
-  MAP_SEG.forEach(([a,b,r,dash]) => { const A = MAP_PTS[a], B = MAP_PTS[b]; g += '<line x1="'+A[0]+'" y1="'+A[1]+'" x2="'+B[0]+'" y2="'+B[1]+'" stroke="'+LINE[r]+'" stroke-width="'+(dash?3:5)+'" stroke-linecap="round"'+(dash?' stroke-dasharray="1 7"':'')+'/>'; });
-  Object.values(MAP_PTS).forEach(p => {
-    const r = regionOf(p[3]);
-    g += '<g class="mp" data-day="'+p[3]+'" role="link" tabindex="0" aria-label="'+esc(p[2])+', dia '+p[3]+'"><circle cx="'+p[0]+'" cy="'+p[1]+'" r="16" fill="transparent"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="6.5" fill="var(--bg)" stroke="'+LINE[r]+'" stroke-width="3.5"/><text x="'+(p[0]+p[5])+'" y="'+(p[1]+p[6])+'" text-anchor="'+p[4]+'">'+esc(p[2])+'</text></g>';
+  let g = '', ar = '';
+  const P = q => Array.isArray(q) ? q : MAP_PTS[q];
+  MAP_SEG.forEach(([pts,r,dash]) => {
+    const xy = pts.map(P);
+    g += '<polyline points="'+xy.map(p => p[0]+','+p[1]).join(' ')+'" fill="none" stroke="'+LINE[r]+'" stroke-width="'+(dash?3:5.5)+'" stroke-linecap="round" stroke-linejoin="round"'+(dash?' stroke-dasharray="1 7"':'')+'/>';
+    if (!dash) for (let i=0; i<xy.length-1; i++){
+      const [x1,y1] = xy[i], [x2,y2] = xy[i+1], len = Math.hypot(x2-x1,y2-y1); if (len < 40) continue;
+      const ang = Math.atan2(y2-y1,x2-x1)*180/Math.PI, mx = (x1+x2)/2, my = (y1+y2)/2;
+      ar += '<path d="M-2.2,-3.2 L2,0 L-2.2,3.2" transform="translate('+mx.toFixed(1)+','+my.toFixed(1)+') rotate('+ang.toFixed(1)+')" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
   });
-  return '<section class="mapbox" aria-labelledby="mapT"><div class="head"><h2 id="mapT">Mapa da viagem</h2><span>toque numa cidade</span></div><svg viewBox="0 0 380 222" role="img" aria-label="Mapa esquemático da rota">'+g+'</svg><p class="mnote">Mapa esquemático, no estilo dos mapas de metrô: mostra a ordem, não a distância. As linhas pontilhadas são passeios de ida e volta.</p></section>';
+  g += ar;
+  Object.entries(MAP_PTS).forEach(([key,p]) => {
+    const r = regionOf(p[4]), x = p[0]+p[6], y0 = p[1]+p[7];
+    const [y1,y2] = p[7] < 0 ? [y0-11, y0] : p[7] > 0 ? [y0, y0+11] : [y0-1, y0+10];
+    g += '<g class="mp" data-day="'+p[4]+'" role="link" tabindex="0" aria-label="'+esc(p[2])+', '+esc(p[3])+'"><circle cx="'+p[0]+'" cy="'+p[1]+'" r="16" fill="transparent"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(key==='tok'?8:6.5)+'" fill="var(--bg)" stroke="'+LINE[r]+'" stroke-width="'+(key==='tok'?4.5:3.5)+'"/>'
+      + '<text x="'+x+'" y="'+y1+'" text-anchor="'+p[5]+'">'+esc(p[2])+'</text><text class="sd" x="'+x+'" y="'+y2+'" text-anchor="'+p[5]+'">'+esc(p[3])+'</text></g>';
+  });
+  const route = MAP_ROUTE.map(([d,c],i) => '<button type="button" data-day="'+d+'" style="--lc:'+LINE[regionOf(d)]+'"><b>'+d+'</b>'+esc(c)+'</button>').join('<span class="ra" aria-hidden="true">›</span>');
+  return '<section class="mapbox" aria-labelledby="mapT"><div class="head"><h2 id="mapT">Mapa da viagem</h2><span>toque numa cidade</span></div><svg viewBox="0 0 400 236" role="img" aria-label="Mapa esquemático da rota">'+g+'</svg>'
+    + '<p class="rt-h">O roteiro, em ordem <small>(o número é o dia em que chegam)</small></p><div class="rt">'+route+'</div>'
+    + '<p class="mnote">As setas mostram o sentido da viagem. Linhas pontilhadas são passeios de ida e volta. O mapa mostra a ordem, não a distância.</p></section>';
 }
 function renderTrains(){
   let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>TRENS</small><span>🚆</span></div><div><p class="of">Como se locomover</p><h2>Trens e transporte</h2></div></section>';
@@ -792,7 +841,7 @@ function closeDrawer(){
 }
 
 function renderOverview(){
-  let h = renderCountdown() + renderClocks() + renderCalendar() + renderMap() + '<div class="resvbox">'+resvHtml()+'</div>' + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
+  let h = renderCountdown() + renderClocks() + renderCalendar() + renderMiniYen() + renderMap() + '<div class="resvbox">'+resvHtml()+'</div>' + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
     + '<div><button class="btn" id="offBtn" type="button">'+ICON_DL+'Baixar para usar offline</button></div>'
     + '<span class="bar" id="offBar" hidden><i></i></span><div class="status" id="offStatus"></div></section>';
   REGIONS.forEach(([a,b,label]) => {
@@ -959,11 +1008,30 @@ function markNext(){
 }
 setInterval(() => { updateLed(); markNext(); }, 30000);
 
+const TRIP_T0 = Date.parse("2027-01-06T00:00:00+09:00");
+function cdParts(){
+  let ms = Math.max(0, TRIP_T0 - Date.now()); const d = Math.floor(ms/86400000); ms -= d*86400000; const h = Math.floor(ms/3600000); ms -= h*3600000; const m = Math.floor(ms/60000); const sec = Math.floor((ms - m*60000)/1000);
+  return [[d,d===1?"dia":"dias"],[h,"horas"],[m,"min"],[sec,"seg"]].map(([v,l],i) => '<span><b>'+(i?String(v).padStart(2,"0"):v)+'</b><small>'+l+'</small></span>').join('');
+}
+let lastTripDay = null;
+function tickTrip(){
+  const el = document.getElementById("cdT"); if (el) el.innerHTML = cdParts();
+  const n = tripDayToday();
+  if (lastTripDay !== null && n !== lastTripDay){ if (cur.day === 0) render(); if (n) showTodayPop(n); }
+  lastTripDay = n;
+}
+function showTodayPop(n){
+  if (cur.day === n) return;
+  let seen = null; try { seen = localStorage.getItem("jp-todaypop"); } catch(e) {}
+  const key = jstToday().toISOString().slice(0,10); if (seen === key) return;
+  try { localStorage.setItem("jp-todaypop", key); } catch(e) {}
+  const p = plans(DATA[n-1])[0].plan;
+  openPop('<div class="tp"><p class="lbl" style="margin:0;font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">'+(n===1?'A viagem começou! 🎌':'Bom dia no Japão')+'</p><h3>Hoje é o dia '+n+' de 20</h3><p>'+fmtDate(n)+' · '+esc(p.title)+'</p><button class="btn" type="button" data-goday="'+n+'">Abrir a programação de hoje</button></div>');
+}
 function renderCountdown(){
   const t = jstToday(), n = tripDayToday();
   if (n) return '<section class="cd"><span class="num">'+String(n).padStart(2,"0")+'</span><span class="cdl"><b>Hoje · dia '+n+' de 20</b>'+esc(CITY_FULL[n-1])+'</span><button class="go" type="button" data-day="'+n+'">Abrir o dia</button></section>';
-  const days = Math.round((START - t)/86400000);
-  if (days > 0) return '<section class="cd"><span class="num">'+days+'</span><span class="cdl"><b>'+(days===1?'dia para a viagem':'dias para a viagem')+'</b>Chegada a Tóquio em 5 de janeiro</span></section>';
+  if (Date.now() < TRIP_T0) return '<section class="cd cdt"><span class="cdl"><b>Contagem para o dia 1</b></span><div class="tm" id="cdT">'+cdParts()+'</div><span class="cdl" style="font-size:13px;color:#C9D1D9">Até 6/jan, 0h no horário do Japão. Chegada a Tóquio na noite de 5/jan.</span></section>';
   return "";
 }
 
@@ -1241,7 +1309,7 @@ async function downloadAll(){
 
 document.addEventListener("click", e => {
   if (calcClick(e)) return;
-  if (!document.getElementById("pop").hidden){ if (!e.target.closest("#popC") || e.target.closest("[data-closepop]")) closePop(); return; }
+  if (!document.getElementById("pop").hidden){ const pd = e.target.closest("#popC [data-goday]"); if (pd){ closePop(); go(+pd.dataset.goday, 0); return; } if (!e.target.closest("#popC") || e.target.closest("[data-closepop]")) closePop(); return; }
   if (e.target.closest("#dtab")){ openDrawer(); return; }
   if (e.target.closest("#dx") || e.target.id === "dscrim"){ closeDrawer(); return; }
   const tl = e.target.closest("#drawerList [data-day]"); if (tl){ closeDrawer(); go(+tl.dataset.day, 0); return; }
@@ -1277,6 +1345,7 @@ if ("serviceWorker" in navigator && location.protocol === "https:") { navigator.
 window.addEventListener("hashchange", () => { closePop(); fromHash(); render(); });
 fetchRate(false);
 fromHash(); if (!location.hash || location.hash === "#"){ const tn = tripDayToday(); if (tn){ cur.day = tn; history.replaceState(null, "", "#dia-"+tn); } } render();
+{ const tn = tripDayToday(); if (tn) showTodayPop(tn); }
 </script>
 </body>
 </html>
