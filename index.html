@@ -210,6 +210,7 @@ details.pn .pbody p + p{margin-top:10px}
 .sub-nav button{flex:0 0 auto}
 .hrs{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:6px;cursor:pointer;padding:0}
 .hrs svg{width:15px;height:15px}
+.hrs.txb{font-size:15px;line-height:1}
 .mapbox{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:12px 10px 8px;background:var(--bg)}
 .mapbox .head{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px}
 .mapbox h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase}
@@ -299,6 +300,10 @@ details.pn .pbody p + p{margin-top:10px}
 .cd.cdt .cdl b{font-size:14px}
 .tp h3{font-size:20px}
 .tp .btn{width:100%;margin-top:10px;min-height:48px;font-size:16px}
+.miniyen .quick{display:flex;flex-wrap:wrap;gap:6px}
+.miniyen .quick button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;min-height:34px}
+.miniyen .iof{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink-2)}
+.miniyen .iof input{width:20px;height:20px;accent-color:var(--accent)}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -558,9 +563,16 @@ function parseNum(str){ if (!str) return 0; const t = String(str).replace(/[^\d,
 function factor(){ return calc.rate * (calc.iof ? 1 + calc.iofPct/100 : 1); }
 function fmtDay(iso){ const [y,m,d] = iso.split("-"); return d+"/"+m; }
 function renderMiniYen(){
-  return '<section class="miniyen" aria-labelledby="myT"><div class="mh"><h2 id="myT">¥ → R$</h2><span>1 ¥ = '+factor().toLocaleString("pt-BR",{minimumFractionDigits:4, maximumFractionDigits:4})+' R$'+(calc.iof?' com IOF':'')+'</span></div>'
+  return '<section class="miniyen" aria-labelledby="myT"><div class="mh"><h2 id="myT">¥ → R$</h2><span id="mRate">1 ¥ = '+factor().toLocaleString("pt-BR",{minimumFractionDigits:4, maximumFractionDigits:4})+' R$'+(calc.iof?' com IOF':'')+'</span></div>'
     + '<div class="pair"><label>Ienes<span class="inp"><span>¥</span><input id="mJPY" inputmode="numeric" placeholder="0" autocomplete="off"></span></label><label>Reais<span class="inp"><span>R$</span><input id="mBRL" inputmode="decimal" placeholder="0,00" autocomplete="off"></span></label></div>'
+    + '<div class="quick">'+[500,1000,3000,5000,10000].map(v => '<button type="button" data-mq="'+v+'">'+fmtJPY(v)+'</button>').join("")+'</div>'
+    + '<label class="iof"><input type="checkbox" id="mIof"'+(calc.iof?' checked':'')+'> Somar IOF do cartão ('+String(calc.iofPct).replace(".",",")+'%)</label>'
     + '<button class="lnk" type="button" data-tab="-6">Conversor completo e gastos →</button></section>';
+}
+function miniSync(){
+  const j = document.getElementById("mJPY"); if (!j) return; const v = parseNum(j.value);
+  document.getElementById("mBRL").value = v ? (v*factor()).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2}) : "";
+  document.getElementById("mRate").textContent = '1 ¥ = '+factor().toLocaleString("pt-BR",{minimumFractionDigits:4, maximumFractionDigits:4})+' R$'+(calc.iof?' com IOF':'');
 }
 function renderYen(){
   document.getElementById("app").innerHTML = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>IENES</small><span>¥</span></div><div><p class="of">Câmbio e gastos</p><h2>Conversor de ienes</h2></div></section>' + renderCalc() + '<div class="yref"><h2 class="section-title">Quanto custa no Japão</h2><div class="yl">' + [["Café no konbini","¥150–250"],["Onigiri","¥150–250"],["Bebida na máquina","¥130–200"],["Ramen","¥1.000–1.500"],["Almoço simples (teishoku)","¥1.000–1.500"],["Jantar em izakaya, por pessoa","¥3.000–5.000"],["Metrô em Tóquio, trecho curto","¥180–330"],["Entrada de templo","¥300–1.000"]].map(x => '<div><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join('') + '</div><p class="note">Valores aproximados, para ter noção do preço.</p></div></div>';
@@ -605,7 +617,7 @@ async function fetchRate(manualClick){
 }
 let clearArm = false;
 document.addEventListener("input", e => {
-  if (e.target.id === "mJPY"){ const v = parseNum(e.target.value); document.getElementById("mBRL").value = v ? (v*factor()).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2}) : ""; return; }
+  if (e.target.id === "mJPY"){ miniSync(); return; }
   if (e.target.id === "mBRL"){ const v = parseNum(e.target.value); document.getElementById("mJPY").value = v ? Math.round(v/factor()).toLocaleString("pt-BR") : ""; return; }
   if (e.target.id === "inJPY") syncFrom("jpy");
   else if (e.target.id === "inBRL") syncFrom("brl");
@@ -614,7 +626,7 @@ document.addEventListener("input", e => {
 document.addEventListener("change", e => {
   if (e.target.dataset && e.target.dataset.resv){ resv[e.target.dataset.resv] = e.target.checked; if (!e.target.checked) delete resv[e.target.dataset.resv]; lsSet("jp-resv", resv); e.target.closest(".rv").classList.toggle("ok", e.target.checked);  const sm = e.target.closest("details.pn"); if (sm){ const pend = GUIDE.resv.filter(r => !resv[r[0]]).length; const lab = sm.querySelector("summary"); lab.childNodes[1].textContent = 'Reservas e ingressos · '+(pend ? pend+' pendentes' : 'tudo comprado'); } return; }
   if (e.target.dataset && e.target.dataset.omi != null){ omiSt[e.target.dataset.omi] = e.target.checked; if (!e.target.checked) delete omiSt[e.target.dataset.omi]; lsSet("jp-omi", omiSt); return; }
-  if (e.target.dataset && e.target.dataset.pack != null){ packSt[e.target.dataset.pack] = e.target.checked; lsSet("jp-pack", packSt); return; } if (e.target.id === "iofOn"){ calc.iof = e.target.checked; saveCalc(); syncFrom("jpy"); } });
+  if (e.target.dataset && e.target.dataset.pack != null){ packSt[e.target.dataset.pack] = e.target.checked; lsSet("jp-pack", packSt); return; } if (e.target.id === "mIof"){ calc.iof = e.target.checked; saveCalc(); miniSync(); return; } if (e.target.id === "iofOn"){ calc.iof = e.target.checked; saveCalc(); syncFrom("jpy"); } });
 function calcClick(e){
   const q = e.target.closest("[data-q]"); if (q){ document.getElementById("inJPY").value = (+q.dataset.q).toLocaleString("pt-BR"); syncFrom("jpy"); return true; }
   if (e.target.closest("#rateUpd")){ fetchRate(true); return true; }
@@ -643,9 +655,9 @@ const EXTRA = {"hours": {"teamLab Borderless": "Horário varia por data (em gera
 const ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 let omiSt = lsGet("jp-omi") || {};
 const MAP_PTS = {
-  tok:[322,120,"Tóquio","Dias 1 e 15–20",1,"start",10,0], kam:[322,180,"Kamakura","Dia 16",16,"middle",0,20], hak:[262,158,"Hakone","Dia 2",2,"middle",0,20],
-  kyo:[150,148,"Quioto","Dias 3–7",3,"middle",0,-13], nar:[150,208,"Nara","Dia 6",6,"start",10,0], hir:[34,148,"Hiroshima","Dias 7–8",7,"middle",0,-13],
-  miy:[34,204,"Miyajima","Dia 9",9,"middle",0,20], oka:[92,194,"Okayama","Dia 10",10,"middle",0,20], nag:[214,126,"Nagoya","Dia 11",11,"start",11,0],
+  tok:[322,140,"Tóquio","Dias 1 e 15–20",1,"start",10,0], kam:[322,200,"Kamakura","Dia 16",16,"middle",0,20], hak:[262,178,"Hakone","Dia 2",2,"middle",0,20],
+  kyo:[150,168,"Quioto","Dias 3–7",3,"middle",0,-13], nar:[150,228,"Nara","Dia 6",6,"start",10,0], hir:[34,168,"Hiroshima","Dias 7–8",7,"start",10,16],
+  miy:[34,224,"Miyajima","Dia 9",9,"middle",0,20], oka:[86,96,"Okayama","Dia 10",10,"middle",0,-13], nag:[214,126,"Nagoya","Dia 11",11,"start",11,0],
   tak:[214,70,"Takayama","Dias 12–13",12,"start",10,0], shi:[150,70,"Shirakawa-gō","Dia 13",13,"middle",0,20], kan:[214,26,"Kanazawa","Dia 14",14,"end",-11,0]
 };
 const MAP_SEG = [[["tok","hak"],0],[["hak","kyo"],1],[["kyo","nar"],1,1],[["kyo","hir"],2],[["hir","miy"],2,1],[["hir","oka"],3],[["oka","nag"],3],[["nag","tak"],3],[["tak","shi"],3,1],[["tak","kan"],3],[["kan",[322,26],"tok"],4],[["tok","kam"],4,1]];
@@ -670,7 +682,7 @@ function renderMap(){
       + '<text x="'+x+'" y="'+y1+'" text-anchor="'+p[5]+'">'+esc(p[2])+'</text><text class="sd" x="'+x+'" y="'+y2+'" text-anchor="'+p[5]+'">'+esc(p[3])+'</text></g>';
   });
   const route = MAP_ROUTE.map(([d,c],i) => '<button type="button" data-day="'+d+'" style="--lc:'+LINE[regionOf(d)]+'"><b>'+d+'</b>'+esc(c)+'</button>').join('<span class="ra" aria-hidden="true">›</span>');
-  return '<section class="mapbox" aria-labelledby="mapT"><div class="head"><h2 id="mapT">Mapa da viagem</h2><span>toque numa cidade</span></div><svg viewBox="0 0 400 236" role="img" aria-label="Mapa esquemático da rota">'+g+'</svg>'
+  return '<section class="mapbox" aria-labelledby="mapT"><div class="head"><h2 id="mapT">Mapa da viagem</h2><span>toque numa cidade</span></div><svg viewBox="0 0 400 262" role="img" aria-label="Mapa esquemático da rota">'+g+'</svg>'
     + '<p class="rt-h">O roteiro, em ordem <small>(o número é o dia em que chegam)</small></p><div class="rt">'+route+'</div>'
     + '<p class="mnote">As setas mostram o sentido da viagem. Linhas pontilhadas são passeios de ida e volta. O mapa mostra a ordem, não a distância.</p></section>';
 }
@@ -885,13 +897,13 @@ function renderDay(){
       + '<div class="actions">'
       + (s.maps ? '<a class="maps" href="'+esc(s.maps)+'" target="_blank" rel="noopener" aria-label="Abrir '+esc(s.name)+' no Google Maps">'+ICON_PIN+'Maps</a>' : '')
       + '<button class="check" type="button" data-i="'+i+'" aria-pressed="'+on+'">'+ICON_CHECK+(on?'Visto':'Marcar visto')+'</button>'
+      + (s.ja ? '<button class="hrs txb" type="button" data-ja="'+i+'" aria-label="Endereço em japonês para o taxista" title="Para o taxista">🚕</button>' : '')
       + (EXTRA.hours[s.name] ? '<button class="hrs" type="button" data-hours="'+i+'" aria-label="Horário de '+esc(s.name)+'" title="Horário">'+ICON_CLOCK+'</button>' : '')
       + '</div></div>'
       + (hasPic ? '<button class="thumb" type="button" data-photo="'+esc(s.name)+'" aria-label="Foto: '+esc(s.name)+'">'+ICON_IMG+'</button>' : '')
       + '</div>';
     if (s.hist) h += panel('📖', 'História', [].concat(s.hist).map(x => '<p>'+esc(x)+'</p>').join('<br>'));
     if (cs.length) h += panel('❓', cs.length+' curiosidades', '<ol>'+cs.map(c => '<li><span>'+esc(c)+'</span></li>').join('')+'</ol>'+(hasPic?'<p class="credit" data-credit="'+esc(s.name)+'" hidden></p>':''));
-    if (s.ja) h += panel('🚕', 'Para o taxista', '<div class="ja" lang="ja"><span class="lbl" lang="pt-BR">Mostre esta tela ao motorista</span><span class="nm">'+esc(s.ja[0])+'</span><span class="ad">'+esc(s.ja[1])+'</span><span class="say">ここまでお願いします。</span><button class="full" type="button" lang="pt-BR" data-ja="'+i+'">Mostrar em tela cheia</button></div>');
     const nx = p.stops[i+1];
     if (s.maps && nx && nx.maps) h += '<a class="leg" href="'+dirUrl(mq(s.maps), mq(nx.maps), "transit")+'" target="_blank" rel="noopener">'+ICON_TRAIN+'Como chegar a '+esc(nx.name)+'</a>';
     h += '</div></li>';
@@ -1031,7 +1043,11 @@ function showTodayPop(n){
 function renderCountdown(){
   const t = jstToday(), n = tripDayToday();
   if (n) return '<section class="cd"><span class="num">'+String(n).padStart(2,"0")+'</span><span class="cdl"><b>Hoje · dia '+n+' de 20</b>'+esc(CITY_FULL[n-1])+'</span><button class="go" type="button" data-day="'+n+'">Abrir o dia</button></section>';
-  if (Date.now() < TRIP_T0) return '<section class="cd cdt"><span class="cdl"><b>Contagem para o dia 1</b></span><div class="tm" id="cdT">'+cdParts()+'</div><span class="cdl" style="font-size:13px;color:#C9D1D9">Até 6/jan, 0h no horário do Japão. Chegada a Tóquio na noite de 5/jan.</span></section>';
+  const br = new Date(new Date().toLocaleString("en-US",{timeZone:"America/Sao_Paulo"})); br.setHours(0,0,0,0);
+  const days = Math.round((new Date(2027,0,3) - br)/86400000);
+  if (days > 0) return '<section class="cd"><span class="num">'+days+'</span><span class="cdl"><b>'+(days===1?'dia para o aeroporto':'dias para o aeroporto')+'</b>Saída para o aeroporto em 3 de janeiro</span></section>';
+  if (days === 0) return '<section class="cd"><span class="num">✈️</span><span class="cdl"><b>Hoje é dia de aeroporto</b>Boa viagem! Chegada a Tóquio na noite de 5/jan.</span></section>';
+  if (Date.now() < TRIP_T0) return '<section class="cd"><span class="num">✈️</span><span class="cdl"><b>Em viagem</b>Chegada a Tóquio na noite de 5/jan (horário do Japão).</span></section>';
   return "";
 }
 
@@ -1317,6 +1333,7 @@ document.addEventListener("click", e => {
   const jp = e.target.closest("[data-jump]"); if (jp){ const t = document.getElementById(jp.dataset.jump); if (t) window.scrollTo({top: t.getBoundingClientRect().top + window.scrollY - 110, behavior:"smooth"}); return; }
   const ct = e.target.closest("[data-city]"); if (ct){ openReader(+ct.dataset.city); return; }
   const gt = e.target.closest("[data-gt]"); if (gt){ const [sl,tl] = gt.dataset.gt.split("|"); const t = (document.getElementById("gtIn").value||"").trim(); window.open("https://translate.google.com/?sl="+sl+"&tl="+tl+"&op=translate"+(t?"&text="+encodeURIComponent(t):""), "_blank", "noopener"); return; }
+  const mq = e.target.closest("[data-mq]"); if (mq){ document.getElementById("mJPY").value = (+mq.dataset.mq).toLocaleString("pt-BR"); miniSync(); return; }
   const hb = e.target.closest("[data-hours]"); if (hb){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+hb.dataset.hours]; openPop('<h3>🕘 '+esc(st.name)+'</h3><p>'+esc(EXTRA.hours[st.name])+'</p><small>Horários de inverno; podem mudar. Confiram no site oficial antes de ir. Toque fora para fechar.</small>'); return; }
   const et = e.target.closest("[data-etiq]"); if (et){ const x = GUIDE.etiq[+et.dataset.etiq]; openPop('<h3>'+esc(x[0])+'</h3><p>'+esc(x[1])+'</p><small>Toque fora para fechar.</small>'); return; }
   const sb = e.target.closest("[data-say]"); if (sb){ say(sb.dataset.say); return; }
