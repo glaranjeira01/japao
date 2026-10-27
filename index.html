@@ -356,6 +356,10 @@ details.pn .pbody p + p{margin-top:10px}
 .gsl .pk span{display:flex;flex-direction:column}
 .gsl .pk small{font-size:12px;color:var(--muted)}
 .gsl .pk:has(input:checked) span{color:var(--muted);text-decoration:line-through}
+.day-head .dh{flex:1;min-width:0}
+.dnav{display:flex;gap:6px;align-self:flex-start;flex:none}
+.dnav button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:22px;line-height:1;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 3px}
+.dnav button:disabled{opacity:.3;cursor:default}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -997,7 +1001,8 @@ function renderDay(){
   if (cur.v >= ps.length) cur.v = 0;
   const p = ps[cur.v].plan;
   const [done,total] = countDone(n,cur.v);
-  let h = '<section class="day-head"><div class="big" aria-hidden="true"><small>DIA</small><span>'+String(n).padStart(2,"0")+'</span></div><div><p class="of">Dia '+n+' de 20 · '+fmtDate(n)+'</p><h2>'+esc(p.title)+'</h2></div></section>'
+  let h = '<section class="day-head"><div class="big" aria-hidden="true"><small>DIA</small><span>'+String(n).padStart(2,"0")+'</span></div><div class="dh"><p class="of">Dia '+n+' de 20 · '+fmtDate(n)+'</p><h2>'+esc(p.title)+'</h2></div>'
+    + '<div class="dnav"><button type="button" data-day="'+(n-1)+'" aria-label="Dia anterior"'+(n>1?'':' disabled')+'>‹</button><button type="button" data-day="'+(n+1)+'" aria-label="Dia seguinte"'+(n<20?'':' disabled')+'>›</button></div></section>'
     + '<p class="summary">'+esc(p.summary)+'</p>'
     + '<div class="wx" id="wx" aria-live="polite"><span class="ico" aria-hidden="true">🌡️</span><span class="wt"><span class="k avg">Clima</span><span class="ex">Carregando…</span></span></div>'
     + '<div class="wear" id="wear" hidden></div>'
@@ -1065,7 +1070,15 @@ function go(day, v){
   const hash = day===-1 ? "#guia" : day===-2 ? "#wiki" : day===-3 ? "#malas" : day===-4 ? "#trens" : day===-5 ? "#eventos" : day===-6 ? "#ienes" : day ? "#dia-"+day+(cur.v?"-"+cur.v:"") : "#";
   if (location.hash !== hash) history.replaceState(null, "", hash || " ");
   render();
-  window.scrollTo({top: day ? document.querySelector(".nav").offsetTop : 0, behavior:"auto"});
+  const hero = document.querySelector(".hero"), to = day ? hero.offsetTop + hero.offsetHeight : 0;
+  if (day > 0 && window.scrollY > to + 40) quickScroll(to); else window.scrollTo({top: to, behavior:"auto"});
+}
+let qsId = 0;
+function quickScroll(to){
+  const from = window.scrollY, d = to - from, dur = Math.min(450, 180 + Math.abs(d)/40), t0 = performance.now(), id = ++qsId;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches){ window.scrollTo(0, to); return; }
+  const step = now => { if (id !== qsId) return; const k = Math.min(1, (now - t0)/dur), e = 1 - Math.pow(1-k, 3); window.scrollTo(0, from + d*e); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
 }
 function fromHash(){
   const m = location.hash.match(/^#dia-(\d+)(?:-(\d+))?$/);
