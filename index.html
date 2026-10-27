@@ -126,6 +126,8 @@ a{color:inherit}
 .pk{display:flex;gap:10px;align-items:center;padding:6px 0;font-size:14px;color:var(--ink-2)}
 .pk input{width:20px;height:20px;accent-color:var(--accent)}
 .chip.guide{font-weight:700;color:var(--accent)}
+.resvbox{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:2px 14px 6px}
+.resvbox details.pn{border-top:0;margin-top:0}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -424,7 +426,7 @@ document.addEventListener("input", e => {
   else if (e.target.id === "iofPct"){ calc.iofPct = Math.max(0, parseFloat(e.target.value)||0); saveCalc(); syncFrom("jpy"); }
 });
 document.addEventListener("change", e => {
-  if (e.target.dataset && e.target.dataset.resv){ resv[e.target.dataset.resv] = e.target.checked; if (!e.target.checked) delete resv[e.target.dataset.resv]; lsSet("jp-resv", resv); e.target.closest(".rv").classList.toggle("ok", e.target.checked); return; }
+  if (e.target.dataset && e.target.dataset.resv){ resv[e.target.dataset.resv] = e.target.checked; if (!e.target.checked) delete resv[e.target.dataset.resv]; lsSet("jp-resv", resv); e.target.closest(".rv").classList.toggle("ok", e.target.checked);  const sm = e.target.closest("details.pn"); if (sm){ const pend = GUIDE.resv.filter(r => !resv[r[0]]).length; const lab = sm.querySelector("summary"); lab.childNodes[1].textContent = 'Reservas e ingressos · '+(pend ? pend+' pendentes' : 'tudo comprado'); } return; }
   if (e.target.dataset && e.target.dataset.pack != null){ packSt[e.target.dataset.pack] = e.target.checked; lsSet("jp-pack", packSt); return; } if (e.target.id === "iofOn"){ calc.iof = e.target.checked; saveCalc(); syncFrom("jpy"); } });
 function calcClick(e){
   const q = e.target.closest("[data-q]"); if (q){ document.getElementById("inJPY").value = (+q.dataset.q).toLocaleString("pt-BR"); syncFrom("jpy"); return true; }
@@ -565,7 +567,7 @@ function renderChips(){
 }
 
 function renderOverview(){
-  let h = renderCountdown() + renderClocks() + renderCalendar() + renderCalc() + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
+  let h = renderCountdown() + renderClocks() + renderCalendar() + renderCalc() + '<div class="resvbox">'+resvHtml()+'</div>' + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
     + '<div><button class="btn" id="offBtn" type="button">'+ICON_DL+'Baixar para usar offline</button></div>'
     + '<span class="bar" id="offBar" hidden><i></i></span><div class="status" id="offStatus"></div></section>';
   REGIONS.forEach(([a,b,label]) => {
@@ -578,6 +580,7 @@ function renderOverview(){
     }
     h += '</div>';
   });
+  h += emergHtml();
   document.getElementById("app").innerHTML = h;
   offlineStatus();
   tickClocks();
@@ -766,18 +769,23 @@ function fmtOpen(iso){
   return ['<span class="when'+(days<=7?' soon':'')+'">Abre em '+days+' '+(days===1?'dia':'dias')+' · '+jp+' no Japão = '+br+' em Brasília</span>', days<=7];
 }
 let resv = lsGet("jp-resv") || {}, packSt = lsGet("jp-pack") || {};
-function renderGuide(){
-  let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>GUIA</small><span>JP</span></div><div><p class="of">Para consultar na viagem</p><h2>Guia de bolso</h2></div></section>';
-  h += '<h2 class="section-title">Reservas e ingressos</h2><div>' + GUIDE.resv.map(r => {
+function resvHtml(){
+  const pend = GUIDE.resv.filter(r => !resv[r[0]]).length;
+  return panel('🎟️', 'Reservas e ingressos · '+(pend ? pend+' pendentes' : 'tudo comprado'), GUIDE.resv.map(r => {
     const ok = !!resv[r[0]]; const w = r[2] ? fmtOpen(r[2])[0] : '<span class="when">Já dá para comprar</span>';
     return '<label class="rv'+(ok?' ok':'')+'"><input type="checkbox" data-resv="'+r[0]+'"'+(ok?' checked':'')+'><span><b>'+esc(r[1])+'</b>'+w+'<br>'+esc(r[3])+'</span></label>';
-  }).join('') + '</div>';
+  }).join(''));
+}
+function emergHtml(){
+  return '<h2 class="section-title">Contatos de emergência</h2><div>' + GUIDE.emerg.map(e => '<div class="emg"><b>'+esc(e[0])+'</b><a href="tel:'+e[1].replace(/[^\d+]/g,'')+'">'+esc(e[1])+'</a><span>'+esc(e[2])+'</span></div>').join('') + '</div>';
+}
+function renderGuide(){
+  let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>GUIA</small><span>JP</span></div><div><p class="of">Para consultar na viagem</p><h2>Guia de bolso</h2></div></section>';
   h += '<h2 class="section-title">Frases úteis</h2>';
   GUIDE.phrases.forEach(([g, list]) => {
     h += panel('💬', esc(g), list.map(x => '<div class="ph"><span class="j" lang="ja">'+esc(x[0])+'</span><button class="say" type="button" data-say="'+esc(x[0].replace(/〜/g,""))+'" aria-label="Ouvir: '+esc(x[2])+'">'+ICON_SPK+'</button><span class="r">'+esc(x[1])+'</span><span class="t">'+esc(x[2])+'</span></div>').join(''));
   });
   h += '<p class="note" style="font-size:12px;color:var(--muted);margin:8px 0 0">O áudio usa a voz japonesa do próprio celular e funciona sem internet na maioria dos aparelhos.</p>';
-  h += '<h2 class="section-title">Emergência</h2><div>' + GUIDE.emerg.map(e => '<div class="emg"><b>'+esc(e[0])+'</b><a href="tel:'+e[1].replace(/[^\d+]/g,'')+'">'+esc(e[1])+'</a><span>'+esc(e[2])+'</span></div>').join('') + '</div>';
   h += '<h2 class="section-title">Etiqueta rápida</h2><div>' + GUIDE.etiq.map(e => '<div class="et"><b>'+esc(e[0])+'</b>'+esc(e[1])+'</div>').join('') + '</div>';
   h += '<h2 class="section-title">O que provar</h2>';
   Object.values(GUIDE.food).forEach(f => { h += panel('🍜', esc(f[0]), f[1].map(x => '<div class="fd"><b>'+esc(x[0])+'</b>'+esc(x[1])+'</div>').join('')); });
