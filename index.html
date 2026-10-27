@@ -304,6 +304,35 @@ details.pn .pbody p + p{margin-top:10px}
 .miniyen .quick button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;min-height:34px}
 .miniyen .iof{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink-2)}
 .miniyen .iof input{width:20px;height:20px;accent-color:var(--accent)}
+.snl{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.snl a{text-decoration:none}
+.szc{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg);margin-bottom:10px}
+.szc h3{margin:0 0 4px;font-size:16px}
+.szc p{margin:0 0 8px;font-size:14px;line-height:1.55;color:var(--ink-2)}
+.szi{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600}
+.szi select{font:inherit;font-size:17px;font-weight:700;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.szc .szo{margin:10px 0 0;font-size:16px;color:var(--ink)}
+.szc .szo b{color:var(--accent);font-size:20px}
+.szt{overflow-x:auto;margin-bottom:10px}
+.szt table{width:100%;border-collapse:collapse;font-size:14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.szt th{text-align:left;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--muted);padding:8px 12px;background:var(--paper)}
+.szt td{padding:7px 12px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+.fab{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;width:52px;height:52px;border-radius:50%;border:0;background:#111418;color:#FFB020;box-shadow:0 6px 18px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.fab svg{width:24px;height:24px}
+.srch{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;flex-direction:column}
+.srch[hidden]{display:none}
+.srch .sh{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);padding-top:calc(10px + env(safe-area-inset-top))}
+.srch .sh svg{width:20px;height:20px;color:var(--muted);flex:none}
+.srch .sh input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:inherit;font-size:18px;padding:10px 4px;outline:none}
+.srch .sh button{border:0;background:none;color:var(--accent);font:inherit;font-weight:700;font-size:15px;cursor:pointer;padding:8px}
+.srch .sr{flex:1;overflow-y:auto;padding:6px 12px 30px}
+.srch .sr button{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;column-gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;padding:10px 2px;cursor:pointer}
+.srch .sr .sk{grid-row:1/3;align-self:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:3px 6px;min-width:58px;text-align:center}
+.srch .sr b{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srch .sr small{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srch .sn{color:var(--muted);font-size:14px;padding:12px 2px}
+.flash{animation:fl 1.8s ease}
+@keyframes fl{0%,40%{box-shadow:0 0 0 3px var(--amber);background-color:color-mix(in srgb,var(--amber) 14%,transparent)}100%{box-shadow:0 0 0 0 transparent}}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -507,6 +536,8 @@ footer p{margin:0;flex:1 1 100%}
 <div class="dscrim" id="dscrim"></div>
 <aside class="drawer" id="drawer" aria-label="Dias da viagem" aria-hidden="true"><div class="dh"><div><h2>Roteiro · 20 dias</h2><p id="drawerSub">6 a 25 de janeiro</p></div><button class="dx" id="dx" type="button" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="dl" id="drawerList"></div></aside>
 <div class="pop" id="pop" hidden role="dialog" aria-modal="true"><div class="pc" id="popC"></div></div>
+<button class="fab" id="fabS" type="button" aria-label="Buscar no site"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+<div class="srch" id="srch" hidden role="dialog" aria-modal="true" aria-label="Buscar"><div class="sh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="srIn" type="search" placeholder="Parada, comida, frase, kanji…" autocomplete="off" enterkeyhint="search"><button type="button" id="srX">Fechar</button></div><div class="sr" id="srR"></div></div>
 <div class="netpill" id="netpill" hidden>SEM INTERNET · OFFLINE</div>
 
 <script>
@@ -617,6 +648,7 @@ async function fetchRate(manualClick){
 }
 let clearArm = false;
 document.addEventListener("input", e => {
+  if (e.target.id === "srIn"){ doSearch(e.target.value); return; }
   if (e.target.id === "mJPY"){ miniSync(); return; }
   if (e.target.id === "mBRL"){ const v = parseNum(e.target.value); document.getElementById("mJPY").value = v ? Math.round(v/factor()).toLocaleString("pt-BR") : ""; return; }
   if (e.target.id === "inJPY") syncFrom("jpy");
@@ -626,7 +658,7 @@ document.addEventListener("input", e => {
 document.addEventListener("change", e => {
   if (e.target.dataset && e.target.dataset.resv){ resv[e.target.dataset.resv] = e.target.checked; if (!e.target.checked) delete resv[e.target.dataset.resv]; lsSet("jp-resv", resv); e.target.closest(".rv").classList.toggle("ok", e.target.checked);  const sm = e.target.closest("details.pn"); if (sm){ const pend = GUIDE.resv.filter(r => !resv[r[0]]).length; const lab = sm.querySelector("summary"); lab.childNodes[1].textContent = 'Reservas e ingressos · '+(pend ? pend+' pendentes' : 'tudo comprado'); } return; }
   if (e.target.dataset && e.target.dataset.omi != null){ omiSt[e.target.dataset.omi] = e.target.checked; if (!e.target.checked) delete omiSt[e.target.dataset.omi]; lsSet("jp-omi", omiSt); return; }
-  if (e.target.dataset && e.target.dataset.pack != null){ packSt[e.target.dataset.pack] = e.target.checked; lsSet("jp-pack", packSt); return; } if (e.target.id === "mIof"){ calc.iof = e.target.checked; saveCalc(); miniSync(); return; } if (e.target.id === "iofOn"){ calc.iof = e.target.checked; saveCalc(); syncFrom("jpy"); } });
+  if (e.target.dataset && e.target.dataset.pack != null){ packSt[e.target.dataset.pack] = e.target.checked; lsSet("jp-pack", packSt); return; } if (e.target.id === "szBR"){ szUpdate(); return; } if (e.target.id === "mIof"){ calc.iof = e.target.checked; saveCalc(); miniSync(); return; } if (e.target.id === "iofOn"){ calc.iof = e.target.checked; saveCalc(); syncFrom("jpy"); } });
 function calcClick(e){
   const q = e.target.closest("[data-q]"); if (q){ document.getElementById("inJPY").value = (+q.dataset.q).toLocaleString("pt-BR"); syncFrom("jpy"); return true; }
   if (e.target.closest("#rateUpd")){ fetchRate(true); return true; }
@@ -685,6 +717,67 @@ function renderMap(){
   return '<section class="mapbox" aria-labelledby="mapT"><div class="head"><h2 id="mapT">Mapa da viagem</h2><span>toque numa cidade</span></div><svg viewBox="0 0 400 262" role="img" aria-label="Mapa esquemático da rota">'+g+'</svg>'
     + '<p class="rt-h">O roteiro, em ordem <small>(o número é o dia em que chegam)</small></p><div class="rt">'+route+'</div>'
     + '<p class="mnote">As setas mostram o sentido da viagem. Linhas pontilhadas são passeios de ida e volta. O mapa mostra a ordem, não a distância.</p></section>';
+}
+const SNOW_L = {
+  nohi:["🚌 Ônibus Nōhi","https://www.nouhibus.co.jp/"],
+  gifuT:["🚆 Trens em Gifu (Hida)","https://transit.yahoo.co.jp/diainfo/pref/21"],
+  ishiT:["🚆 Trens em Ishikawa","https://transit.yahoo.co.jp/diainfo/pref/17"],
+  jrw:["🚄 JR West (Hokuriku), em inglês","https://www.westjr.co.jp/global/en/travel_support/traininfo.html"],
+  road:["🛣️ Estradas fechadas (JARTIC)","https://www.jartic.or.jp/"],
+  jma:["⚠️ Alertas de neve (JMA)","https://www.jma.go.jp/bosai/warning/"]
+};
+const SNOW = {
+  12:["Hoje vocês sobem para as montanhas no expresso Hida. Com neve muito forte, o trem pode atrasar ou ser cancelado: confiram de manhã antes de sair para a estação de Nagoya.", ["gifuT","jma"]],
+  13:["O ônibus para Shirakawa-gō passa por estrada de montanha. Com nevasca, a Nōhi pode cancelar viagens ou a estrada pode fechar. Vejam o site da Nōhi e as estradas antes de ir à rodoviária; se cancelar, usem o plano B.", ["nohi","road","jma"]],
+  14:["O ônibus Takayama → Kanazawa usa a autoestrada Tōkai-Hokuriku, que fecha com neve forte. Se isso acontecer, o plano B é o expresso Hida até Toyama e o Shinkansen até Kanazawa.", ["nohi","road","gifuT","jma"]],
+  15:["O Shinkansen Hokuriku quase nunca para por neve, mas atrasos acontecem em nevascas fortes. Vale conferir antes de sair do hotel.", ["jrw","ishiT"]]
+};
+function snowPanel(n){
+  const [t, ls] = SNOW[n];
+  return panel('❄️', 'Neve, trens e estradas', '<p>'+esc(t)+'</p><div class="snl">'+ls.map(k => '<a class="sbtn" href="'+SNOW_L[k][1]+'" target="_blank" rel="noopener">'+SNOW_L[k][0]+'</a>').join('')+'</div><p style="font-size:12px;color:var(--muted)">Os sites estão em japonês; o tradutor do navegador ajuda. No Yahoo, linha sem aviso = funcionando normal (平常運転).</p>');
+}
+let SIDX = null, SRES = [];
+const norm = t => (t||"").toString().normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+function buildIdx(){
+  const I = [];
+  const add = (k, t, sub, body, act) => I.push({k, t, sub, n: norm(t), b: norm(t+" "+sub+" "+body), act});
+  DATA.forEach((d, di) => plans(d).forEach((pl, v) => pl.plan.stops.forEach((st, i) => {
+    if (v > 0 && d.main.stops.some(x => x.name === st.name)) return;
+    add("Parada", st.name, "Dia "+(di+1)+" · "+SHORT[di]+(v?" · "+pl.label:""), (st.desc||"")+" "+(st.ja?st.ja[0]:""), () => goStop(di+1, v, i));
+  })));
+  GUIDE.phrases.forEach(([g, list]) => list.forEach(x => add("Frase", x[2], x[1], x[0]+" "+g, () => openPop('<p class="lbl" style="margin:0;font-size:12px;color:var(--muted)">'+esc(g)+'</p><h3 lang="ja" style="font-size:26px">'+esc(x[0])+'</h3><p><i>'+esc(x[1])+'</i><br>'+esc(x[2])+'</p><button class="btn" type="button" data-say="'+esc(x[0].replace(/〜/g,""))+'">'+ICON_SPK+'Ouvir</button>'))));
+  Object.values(GUIDE.food).forEach(([city, items]) => items.forEach(x => add("Comida", x[0], city, x[1], () => openPop('<p class="lbl" style="margin:0;font-size:12px;color:var(--muted)">O que provar · '+esc(city)+'</p><h3>'+esc(x[0])+'</h3><p>'+esc(x[1])+'</p>'))));
+  EXTRA.menu.forEach(m => add("Kanji", m[2], m[0]+" · "+m[1], "", () => openPop('<p class="lbl" style="margin:0;font-size:12px;color:var(--muted)">Cardápio</p><h3 lang="ja" style="font-size:40px;margin:4px 0">'+esc(m[0])+'</h3><p><i>'+esc(m[1])+'</i> · '+esc(m[2])+'</p>')));
+  GUIDE.etiq.forEach(x => add("Etiqueta", x[0], "Guia", x[1], () => openPop('<h3>'+esc(x[0])+'</h3><p>'+esc(x[1])+'</p>')));
+  EXTRA.events.forEach((ev, i) => add("Evento", ev[2], ev[3], ev[4], () => goPanel(-5, '.ev', i)));
+  WIKI_TXT.city.forEach((c, i) => add("História", c[0], "História da cidade", "", () => openReader(i)));
+  [["rel","Xintoísmo e budismo"],["kami","Kamis e yokais"]].forEach(([k,lab]) => WIKI_TXT[k].forEach(([t, ps]) => add("Wiki", t, lab, ps.join(" "), () => goPanel(-2, null, t))));
+  EXTRA.samurai.forEach(([t, ps]) => add("Wiki", t, "Samurais e ninjas", ps.join(" "), () => goPanel(-2, null, t)));
+  EXTRA.konbini.forEach(([t, ps]) => add("Wiki", t, "Konbini e dinheiro", ps.join(" "), () => goPanel(-2, null, t)));
+  EXTRA.timeline.forEach((t, i) => add("Wiki", t[0], "Linha do tempo · "+t[1], t[2]+" "+t[3], () => goPanel(-2, '.tlx li', i)));
+  EXTRA.trains.forEach(([t, ps]) => add("Trens", t, "Guia de trens", ps.join(" "), () => goPanel(-4, null, t)));
+  EXTRA.legs.forEach((l, i) => add("Trens", l[1], "Dia "+l[0]+" · "+l[2], l[4], () => goPanel(-4, '.legc', i)));
+  return I;
+}
+function doSearch(q){
+  const out = document.getElementById("srR"); const nq = norm(q).trim();
+  if (nq.length < 2){ out.innerHTML = '<p class="sn">Digite pelo menos 2 letras. Busca em paradas, comidas, frases, kanji, etiqueta, eventos, trens e na Wiki.</p>'; SRES = []; return; }
+  if (!SIDX) SIDX = buildIdx();
+  const words = nq.split(/\s+/);
+  SRES = SIDX.filter(x => words.every(w => x.b.includes(w))).map(x => [x, (x.n.startsWith(nq)?0:x.n.includes(nq)?1:2)]).sort((a,b) => a[1]-b[1]).slice(0, 40).map(x => x[0]);
+  out.innerHTML = SRES.length ? SRES.map((x,i) => '<button type="button" data-sr="'+i+'"><span class="sk">'+esc(x.k)+'</span><b>'+esc(x.t)+'</b><small>'+esc(x.sub)+'</small></button>').join('') : '<p class="sn">Nada encontrado para “'+esc(q)+'”.</p>';
+}
+function openSearch(){ const s = document.getElementById("srch"); s.hidden = false; document.body.style.overflow = "hidden"; const i = document.getElementById("srIn"); doSearch(i.value); setTimeout(() => i.focus(), 30); }
+function closeSearch(){ const s = document.getElementById("srch"); if (s.hidden) return false; s.hidden = true; document.body.style.overflow = ""; return true; }
+function flash(el){ if (!el) return; el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1800); }
+function goStop(n, v, i){ go(n, v); setTimeout(() => flash(document.querySelector('li.stop[data-i="'+i+'"]')), 60); }
+function goPanel(page, sel, key){
+  go(page, 0);
+  setTimeout(() => {
+    if (sel){ flash(document.querySelectorAll(sel)[key]); return; }
+    const d = [...document.querySelectorAll("#app details.pn")].find(x => norm(x.querySelector("summary").textContent).includes(norm(key)));
+    if (d){ d.open = true; flash(d); }
+  }, 60);
 }
 function renderTrains(){
   let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>TRENS</small><span>🚆</span></div><div><p class="of">Como se locomover</p><h2>Trens e transporte</h2></div></section>';
@@ -887,7 +980,7 @@ function renderDay(){
     h += '</div>';
   }
   h += routeLinks(p.stops);
-  if (EXTRA.planb[n]) h += '<div style="margin-top:10px">'+panel('☔', 'Plano B de chuva ou neve', '<p>'+esc(EXTRA.planb[n])+'</p>')+'</div>';
+  if (EXTRA.planb[n]) h += '<div style="margin-top:10px">'+panel('☔', 'Plano B de chuva ou neve', '<p>'+esc(EXTRA.planb[n])+'</p>')+(SNOW[n]?snowPanel(n):'')+'</div>';
   h += '<div class="progress"><span id="progTxt">'+done+' de '+total+' vistas</span><span class="bar" aria-hidden="true"><i id="progBar" style="width:'+(total?Math.round(done/total*100):0)+'%"></i></span></div>';
   h += '<ol class="stops">';
   p.stops.forEach((s,i) => {
@@ -1092,10 +1185,12 @@ function resvHtml(){
 function emergHtml(){
   return '<h2 class="section-title">Contatos de emergência</h2><div>' + GUIDE.emerg.map(e => '<div class="emg"><b>'+esc(e[0])+'</b><a href="tel:'+e[1].replace(/[^\d+]/g,'')+'">'+esc(e[1])+'</a><span>'+esc(e[2])+'</span></div>').join('') + '</div>';
 }
+const SHOE = [[33,"21,5"],[34,"22–22,5"],[35,"23"],[36,"23,5"],[37,"24–24,5"],[38,"25"],[39,"25,5–26"],[40,"26,5"],[41,"27"],[42,"27,5–28"],[43,"28,5"],[44,"29"],[45,"29,5–30"]];
+function szUpdate(){ const s = document.getElementById("szBR"); if (!s) return; const r = SHOE.find(x => x[0] == s.value); document.getElementById("szOut").innerHTML = 'No Japão: <b>'+r[1]+' cm</b>'; }
 function renderGuide(){
   let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>GUIA</small><span>JP</span></div><div><p class="of">Para consultar na viagem</p><h2>Guia de bolso</h2></div></section>';
   h += '<section class="gt"><h2>🌐 Google Tradutor</h2><textarea id="gtIn" rows="2" placeholder="Escreva em português (ou cole um texto em japonês)"></textarea><div class="gtb"><button class="btn" type="button" data-gt="pt|ja">🇯🇵 Para japonês</button><button class="sbtn" type="button" data-gt="ja|pt">🇧🇷 Para português</button></div><p class="note">Abre no app do Google Tradutor, se estiver instalado, ou no navegador. No app, a câmera traduz placas e cardápios e o modo conversa traduz falando. Baixem o pacote offline de japonês no app antes da viagem.</p></section>';
-  h += '<nav class="sub-nav" aria-label="Tópicos do guia"><button type="button" data-jump="g-fr">💬 Frases</button><button type="button" data-jump="g-menu">🈂️ Cardápio</button><button type="button" data-jump="w-food">🍜 O que provar</button><button type="button" data-jump="w-etiq">🙇 Etiqueta</button></nav>';
+  h += '<nav class="sub-nav" aria-label="Tópicos do guia"><button type="button" data-jump="g-fr">💬 Frases</button><button type="button" data-jump="g-menu">🈂️ Cardápio</button><button type="button" data-jump="w-food">🍜 O que provar</button><button type="button" data-jump="w-etiq">🙇 Etiqueta</button><button type="button" data-jump="g-size">👟 Tamanhos</button></nav>';
   h += '<h2 class="section-title" id="g-fr">Frases úteis</h2>';
   GUIDE.phrases.forEach(([g, list]) => {
     h += panel('💬', esc(g), list.map(x => '<div class="ph"><span class="j" lang="ja">'+esc(x[0])+'</span><button class="say" type="button" data-say="'+esc(x[0].replace(/〜/g,""))+'" aria-label="Ouvir: '+esc(x[2])+'">'+ICON_SPK+'</button><span class="r">'+esc(x[1])+'</span><span class="t">'+esc(x[2])+'</span></div>').join(''));
@@ -1109,8 +1204,15 @@ function renderGuide(){
   const seen = new Set(); const order = [];
   GUIDE.foodDay.forEach((k,i) => { if (!seen.has(k)){ seen.add(k); order.push([k,i+1]); } });
   order.forEach(([k,firstDay]) => { const f = GUIDE.food[k]; h += panel('🍜', esc(f[0])+' · a partir do dia '+firstDay, f[1].map(x => '<div class="fd fdi"><span class="fimg" data-food="'+esc(x[0])+'" aria-hidden="true"></span><span><b>'+esc(x[0])+'</b>'+esc(x[1])+'</span></div>').join('')); });
+  h += '<h2 class="section-title" id="g-size">Tamanhos de roupa e sapato</h2><p class="lead">Aproximados: marcas variam. Na dúvida, provem; quase toda loja deixa.</p>';
+  h += '<div class="szc"><h3>👟 Sapato pelo tamanho do pé</h3><p>No Japão, o número do sapato é o comprimento do pé em centímetros. Meçam o pé (do calcanhar ao dedão) e somem cerca de 0,5 cm de folga.</p><label class="szi">Número no Brasil <select id="szBR">'+[33,34,35,36,37,38,39,40,41,42,43,44,45].map(v => '<option'+(v===38?' selected':'')+'>'+v+'</option>').join('')+'</select></label><p class="szo" id="szOut"></p></div>';
+  h += '<div class="szt"><table><thead><tr><th>Brasil</th><th>Japão (cm)</th></tr></thead><tbody>'+SHOE.map(r => '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>').join('')+'</tbody></table></div>';
+  h += panel('👕', 'Roupas: o que muda', '<p>Roupas japonesas costumam ser mais justas e com manga mais curta. Em geral, peguem <b>um tamanho acima</b> do que usam no Brasil: quem veste M aqui costuma vestir L lá.</p><p>As etiquetas usam S, M, L e depois <b>LL</b> (= XL), <b>3L</b> (= XXL) e <b>4L</b>. Uniqlo, GU, Nike e Adidas têm tamanhos maiores com mais facilidade; lojas pequenas às vezes param no L.</p>')
+     + panel('👗', 'Roupa feminina: números japoneses', '<div class="szt"><table><thead><tr><th>Japão</th><th>Letra</th><th>Brasil</th></tr></thead><tbody>'+[["5号","XS","34"],["7号","S","36"],["9号","M","38"],["11号","L","40"],["13号","LL","42"],["15号","3L","44"]].map(r => '<tr><td lang="ja">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>').join('')+'</tbody></table></div><p>号 (gō) quer dizer “número”.</p>')
+     + panel('👔', 'Roupa masculina: pelo tórax', '<div class="szt"><table><thead><tr><th>Japão</th><th>Tórax (cm)</th><th>Brasil, aprox.</th></tr></thead><tbody>'+[["S","80–88","P"],["M","88–96","P/M"],["L","96–104","M/G"],["LL","104–112","G/GG"],["3L","112–120","GG/XGG"]].map(r => '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>').join('')+'</tbody></table></div><p>Calças usam a cintura em cm (ウエスト): meçam a cintura antes da viagem.</p>');
   h += '</div>';
   document.getElementById("app").innerHTML = h;
+  szUpdate();
   document.querySelectorAll("#app details.pn").forEach(d => d.addEventListener("toggle", () => { if (d.open) loadFoodImgs(d); }));
 }
 function renderWiki(){
@@ -1278,7 +1380,7 @@ function closeLB(){
   document.getElementById("lbImg").removeAttribute("src");
   if (lbReturn) { try { lbReturn.focus({preventScroll:true}); } catch(e) {} }
 }
-document.addEventListener("keydown", e => { if (e.key === "Escape"){ closeDrawer(); closePop(); closeLB(); const t = document.getElementById("tx"); if (!t.hidden){ t.hidden = true; document.body.style.overflow = ""; } } });
+document.addEventListener("keydown", e => { if (e.key === "Escape"){ closeSearch(); closeDrawer(); closePop(); closeLB(); const t = document.getElementById("tx"); if (!t.hidden){ t.hidden = true; document.body.style.overflow = ""; } } });
 
 /* ---------- offline ---------- */
 let offBusy = false;
@@ -1325,7 +1427,9 @@ async function downloadAll(){
 
 document.addEventListener("click", e => {
   if (calcClick(e)) return;
-  if (!document.getElementById("pop").hidden){ const pd = e.target.closest("#popC [data-goday]"); if (pd){ closePop(); go(+pd.dataset.goday, 0); return; } if (!e.target.closest("#popC") || e.target.closest("[data-closepop]")) closePop(); return; }
+  if (e.target.closest("#fabS")){ openSearch(); return; }
+  if (!document.getElementById("srch").hidden){ if (e.target.closest("#srX")){ closeSearch(); return; } const r = e.target.closest("[data-sr]"); if (r){ const x = SRES[+r.dataset.sr]; closeSearch(); x.act(); } return; }
+  if (!document.getElementById("pop").hidden){ const ps = e.target.closest("#popC [data-say]"); if (ps){ say(ps.dataset.say); return; } const pd = e.target.closest("#popC [data-goday]"); if (pd){ closePop(); go(+pd.dataset.goday, 0); return; } if (!e.target.closest("#popC") || e.target.closest("[data-closepop]")) closePop(); return; }
   if (e.target.closest("#dtab")){ openDrawer(); return; }
   if (e.target.closest("#dx") || e.target.id === "dscrim"){ closeDrawer(); return; }
   const tl = e.target.closest("#drawerList [data-day]"); if (tl){ closeDrawer(); go(+tl.dataset.day, 0); return; }
@@ -1359,7 +1463,7 @@ function net(){ document.getElementById("netpill").hidden = navigator.onLine; }
 window.addEventListener("online", net); window.addEventListener("offline", net); net();
 
 if ("serviceWorker" in navigator && location.protocol === "https:") { navigator.serviceWorker.register("sw.js").catch(()=>{}); }
-window.addEventListener("hashchange", () => { closePop(); fromHash(); render(); });
+window.addEventListener("hashchange", () => { closePop(); closeSearch(); fromHash(); render(); });
 fetchRate(false);
 fromHash(); if (!location.hash || location.hash === "#"){ const tn = tripDayToday(); if (tn){ cur.day = tn; history.replaceState(null, "", "#dia-"+tn); } } render();
 { const tn = tripDayToday(); if (tn) showTodayPop(tn); }
