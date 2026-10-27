@@ -136,6 +136,16 @@ a{color:inherit}
 .cal .cell .bag svg{width:11px;height:11px}
 .cal .legend .lg-bag b{width:17px;height:17px;border-radius:5px;background:var(--amber);color:#111418;display:inline-flex;align-items:center;justify-content:center}
 .cal .legend .lg-bag svg{width:12px;height:12px}
+.wx{margin:12px 0 0;border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;gap:12px;align-items:center;background:var(--bg)}
+.wx .ico{font-size:30px;line-height:1;flex:0 0 auto;font-family:system-ui,'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}
+.wx .wt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.wx .k{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.wx .k.avg{color:var(--muted)}
+.wx .tt{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:24px;line-height:1.1}
+.wx .tt small{font-size:16px;color:var(--muted);font-weight:600}
+.wx .ex{font-size:13px;color:var(--ink-2)}
+.wx .ft{font-size:11px;color:var(--muted)}
+.wx .ft a{color:var(--muted)}
 .bagnote{display:flex;gap:8px;align-items:center;margin:12px 0 0;padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--amber) 18%,var(--bg));font-size:14px;color:var(--ink);font-weight:500}
 .bagnote svg{width:18px;height:18px;flex:0 0 auto}
 .cal .legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px;font-size:12px;color:var(--ink-2)}
@@ -527,7 +537,8 @@ function renderDay(){
   const [done,total] = countDone(n,cur.v);
   let h = '<section class="day-head"><div class="big" aria-hidden="true"><small>DIA</small><span>'+String(n).padStart(2,"0")+'</span></div><div><p class="of">Dia '+n+' de 20 · '+fmtDate(n)+'</p><h2>'+esc(p.title)+'</h2></div></section>'
     + '<p class="summary">'+esc(p.summary)+'</p>'
-    + (hasBags(n) ? '<p class="bagnote">'+ICON_BAG+'Dia com as malas grandes</p>' : '');
+    + (hasBags(n) ? '<p class="bagnote">'+ICON_BAG+'Dia com as malas grandes</p>' : '')
+    + '<div class="wx" id="wx" aria-live="polite"><span class="ico" aria-hidden="true">🌡️</span><span class="wt"><span class="k avg">Clima</span><span class="ex">Carregando…</span></span></div>';
   if (ps.length > 1){
     h += '<div class="tabs" role="tablist" aria-label="Versões do dia">';
     ps.forEach((x,i) => { h += '<button class="tab" role="tab" type="button" data-v="'+i+'" aria-selected="'+(i===cur.v)+'">'+esc(x.label)+'</button>'; });
@@ -562,6 +573,7 @@ function renderDay(){
   document.getElementById("app").innerHTML = h;
   paintPhotos();
   loadDayPhotos(n).then(() => { if (cur.day===n) paintPhotos(); });
+  loadWeather(n);
 }
 
 function toggleStop(i){
@@ -586,6 +598,86 @@ function go(day, v){
 function fromHash(){
   const m = location.hash.match(/^#dia-(\d+)(?:-(\d+))?$/);
   if (m){ const n = Math.min(20, Math.max(1, +m[1])); cur.day = n; cur.v = +(m[2]||0); } else { cur.day = 0; cur.v = 0; }
+}
+
+
+/* ---------- clima (Open-Meteo) ---------- */
+const WX_LOC = {
+  tok:[35.681,139.767,"Tóquio"], hak:[35.233,139.025,"Hakone"], kyo:[35.011,135.768,"Quioto"], nar:[34.685,135.805,"Nara"],
+  hir:[34.396,132.459,"Hiroshima"], miy:[34.296,132.320,"Miyajima"], oka:[34.665,133.919,"Okayama"], ngk:[35.172,137.089,"Nagakute (Ghibli Park)"],
+  tak:[36.141,137.252,"Takayama"], shi:[36.257,136.906,"Shirakawa-gō"], kan:[36.578,136.648,"Kanazawa"], kam:[35.319,139.550,"Kamakura"]
+};
+const WX_DAY = ["tok","hak","kyo","kyo","kyo","nar","kyo","hir","miy","oka","ngk","tak","shi","kan","tok","kam","tok","tok","tok","tok"];
+const WX_KEYS = Object.keys(WX_LOC);
+function isoDay(n){ const d = dateOf(n); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function jstToday(){ const t = new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Tokyo"})); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+function lsGet(k){ try { return JSON.parse(localStorage.getItem(k)||"null"); } catch(e) { return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+let climateP = null;
+function getClimate(){
+  const cached = lsGet("jp-climate-v1"); if (cached) return Promise.resolve(cached);
+  if (climateP) return climateP;
+  climateP = (async () => {
+    const lats = WX_KEYS.map(k=>WX_LOC[k][0]).join(","), lons = WX_KEYS.map(k=>WX_LOC[k][1]).join(",");
+    const thisYear = new Date().getFullYear();
+    const lastJan = (new Date().getMonth() >= 1) ? thisYear : thisYear - 1;   // último janeiro completo
+    const years = []; for (let y = lastJan - 9; y <= lastJan; y++) years.push(y);
+    const per = {}; WX_KEYS.forEach(k => per[k] = {});
+    await Promise.all(years.map(async y => {
+      const u = "https://archive-api.open-meteo.com/v1/archive?latitude="+lats+"&longitude="+lons+"&start_date="+y+"-01-01&end_date="+y+"-01-31&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum&timezone=Asia%2FTokyo";
+      const r = await fetch(u); if (!r.ok) throw new Error("clima "+r.status);
+      let j = await r.json(); if (!Array.isArray(j)) j = [j];
+      j.forEach((loc, i) => { const k = WX_KEYS[i], dl = loc.daily; dl.time.forEach((t, idx) => {
+        const dm = +t.slice(8,10); (per[k][dm] = per[k][dm] || []).push({mx: dl.temperature_2m_max[idx], mn: dl.temperature_2m_min[idx], pr: dl.precipitation_sum[idx], sn: dl.snowfall_sum[idx]}); }); });
+    }));
+    const out = {years: years[0]+"–"+years[years.length-1], days:{}};
+    for (let n=1; n<=20; n++){
+      const k = WX_DAY[n-1], dm = dateOf(n).getDate(); const rows = [];
+      for (let x = dm-3; x <= dm+3; x++) if (per[k][x]) rows.push(...per[k][x]);
+      const ok = rows.filter(r => r.mx != null && r.mn != null);
+      if (!ok.length) continue;
+      const avg = a => a.reduce((p,c)=>p+c,0)/a.length;
+      out.days[n] = { mx: Math.round(avg(ok.map(r=>r.mx))), mn: Math.round(avg(ok.map(r=>r.mn))),
+        rain: Math.round(100*ok.filter(r => (r.pr||0) >= 1).length/ok.length),
+        snow: Math.round(100*ok.filter(r => (r.sn||0) >= 0.5).length/ok.length) };
+    }
+    lsSet("jp-climate-v1", out); return out;
+  })().catch(e => { climateP = null; throw e; });
+  return climateP;
+}
+const WMO = c => c===0?["☀️","Céu limpo"]:c<=2?["🌤️","Poucas nuvens"]:c===3?["☁️","Nublado"]:c<=48?["🌫️","Neblina"]:c<=57?["🌦️","Garoa"]:c<=67?["🌧️","Chuva"]:c<=77?["🌨️","Neve"]:c<=82?["🌧️","Pancadas de chuva"]:c<=86?["🌨️","Pancadas de neve"]:["⛈️","Tempestade"];
+async function getForecast(k){
+  const key = "jp-fc-"+k, c = lsGet(key);
+  if (c && Date.now() - c.at < 3*3600*1000) return c;
+  try {
+    const [la,lo] = WX_LOC[k];
+    const r = await fetch("https://api.open-meteo.com/v1/forecast?latitude="+la+"&longitude="+lo+"&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,snowfall_sum&timezone=Asia%2FTokyo&forecast_days=16");
+    if (!r.ok) throw 0; const j = await r.json(); const v = {at: Date.now(), d: j.daily}; lsSet(key, v); return v;
+  } catch(e) { return c; }
+}
+async function loadWeather(n){
+  const el = document.getElementById("wx"); if (!el) return;
+  const k = WX_DAY[n-1], place = WX_LOC[k][2], iso = isoDay(n);
+  const diff = Math.round((dateOf(n) - jstToday())/86400000);
+  const credit = '<span class="ft">Dados: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></span>';
+  if (diff >= 0 && diff <= 15){
+    const fc = await getForecast(k);
+    const i = fc && fc.d ? fc.d.time.indexOf(iso) : -1;
+    if (i >= 0 && cur.day === n){
+      const [ic, txt] = WMO(fc.d.weather_code[i]);
+      const pp = fc.d.precipitation_probability_max[i], sn = fc.d.snowfall_sum[i];
+      const at = new Date(fc.at).toLocaleString("pt-BR",{day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
+      el.innerHTML = '<span class="ico" aria-hidden="true">'+ic+'</span><span class="wt"><span class="k">Previsão · '+esc(place)+'</span><span class="tt">'+Math.round(fc.d.temperature_2m_max[i])+'° <small>/ '+Math.round(fc.d.temperature_2m_min[i])+'°</small></span><span class="ex">'+txt+(pp!=null?' · '+pp+'% de chance de chuva ou neve':'')+(sn>0?' · neve '+(Math.round(sn*10)/10).toLocaleString("pt-BR")+' cm':'')+'</span><span class="ft">Atualizada em '+at+(navigator.onLine?'':' (sem internet)')+' · Dados: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></span></span>';
+      return;
+    }
+  }
+  try {
+    const cl = await getClimate(); const c = cl.days[n]; if (!c || cur.day !== n) throw 0;
+    const ic = c.snow >= 30 ? "🌨️" : c.rain >= 35 ? "🌧️" : c.rain >= 20 ? "⛅" : "☀️";
+    el.innerHTML = '<span class="ico" aria-hidden="true">'+ic+'</span><span class="wt"><span class="k avg">Média de '+cl.years+' · '+esc(place)+'</span><span class="tt">'+c.mx+'° <small>/ '+c.mn+'°</small></span><span class="ex">Chuva em '+c.rain+'% dos dias'+(c.snow?' · neve em '+c.snow+'%':'')+'</span><span class="ft">'+(diff > 15 ? 'A previsão real aparece aqui cerca de 15 dias antes. · ' : '')+'Dados: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></span></span>';
+  } catch(e) {
+    if (cur.day === n) el.innerHTML = '<span class="ico" aria-hidden="true">🌡️</span><span class="wt"><span class="k avg">Clima · '+esc(place)+'</span><span class="ex">Sem dados agora. Abra com internet uma vez para carregar.</span>'+credit+'</span>';
+  }
 }
 
 /* ---------- foto ampliada ---------- */
@@ -639,6 +731,7 @@ async function downloadAll(){
     await cacheUrl(c, fcss);
     try { const css = await (await c.match(fcss)).text(); const fonts = [...css.matchAll(/url\((https:[^)]+)\)/g)].map(m=>m[1]);
       for (let i=0;i<fonts.length;i++){ await cacheUrl(c, fonts[i]); if (i%10===0) setP(.05+.15*i/fonts.length, "Salvando as fontes… "+(i+1)+"/"+fonts.length); } } catch(e) {}
+    setP(.18, "Salvando o clima…"); try { await getClimate(); } catch(e) {}
     for (let n=1;n<=20;n++){ setP(.2+.2*n/20, "Procurando as fotos do dia "+n+"…"); await loadDayPhotos(n); }
     const pics = [...new Set(Object.values(photo).filter(Boolean).map(p=>p.src))];
     let ok = 0;
