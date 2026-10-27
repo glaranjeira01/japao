@@ -128,6 +128,67 @@ a{color:inherit}
 .chip.guide{font-weight:700;color:var(--accent)}
 .resvbox{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:2px 14px 6px}
 .resvbox details.pn{border-top:0;margin-top:0}
+
+/* top nav tabs */
+.nav .row{justify-content:space-between}
+.tabn{flex:1 0 auto;border:0;border-bottom:4px solid transparent;background:transparent;color:var(--muted);padding:12px 8px;font:inherit;font-size:15px;font-weight:500;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px}
+.tabn[aria-current="true"]{color:var(--ink);font-weight:700;border-bottom-color:var(--accent)}
+.tabn .ti{font-size:16px;line-height:1;font-family:system-ui,'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}
+/* drawer */
+.dtab{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:40;background:#111418;color:#FFB020;border:1px solid #2B3138;border-right:0;border-radius:12px 0 0 12px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;box-shadow:-2px 2px 10px rgba(0,0,0,.25)}
+.dtab svg{width:18px;height:18px}
+.dtab span{writing-mode:vertical-rl;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.15em}
+.dtab b{font-family:'DotGothic16',monospace;font-weight:400;font-size:15px;color:#FFFFFF}
+.dscrim{position:fixed;inset:0;z-index:70;background:rgba(8,10,12,.5);opacity:0;pointer-events:none;transition:opacity .25s}
+.dscrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:71;width:min(380px,88vw);background:var(--bg);box-shadow:-8px 0 24px rgba(0,0,0,.25);transform:translateX(102%);transition:transform .28s ease;display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+@media (prefers-reduced-motion: reduce){.drawer,.dscrim{transition:none}}
+.drawer .dh{background:#111418;color:#FFFFFF;padding:16px 16px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.drawer .dh h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.05em;text-transform:uppercase}
+.drawer .dh p{margin:2px 0 0;font-family:'DotGothic16',monospace;font-size:12px;color:#FFB020}
+.drawer .dx{width:40px;height:40px;border-radius:50%;border:1px solid #3A424C;background:transparent;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
+.drawer .dx svg{width:18px;height:18px}
+.drawer .dl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 14px 30px;overscroll-behavior:contain}
+.tl-reg{margin:14px 0 4px 34px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--lc)}
+.tl{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;width:100%;border:0;background:transparent;color:inherit;font:inherit;text-align:left;padding:0;cursor:pointer}
+.tl .rail{position:relative;display:flex;justify-content:center}
+.tl .rail::before{content:"";position:absolute;top:0;bottom:0;width:5px;background:var(--lc)}
+.tl:first-of-type .rail::before{top:10px}
+.tl .node{position:relative;margin-top:8px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:4px solid var(--lc);box-sizing:border-box}
+.tl.done .node{background:var(--lc)}
+.tl .tx2{padding:6px 8px 12px;border-radius:8px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.tl:hover .tx2{background:var(--paper)}
+.tl[aria-current="true"] .tx2{background:var(--accent-soft)}
+.tl .d1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.tl .d1 .bg{width:15px;height:15px;border-radius:4px;background:var(--amber);color:#111418;display:inline-flex;align-items:center;justify-content:center}
+.tl .d1 .bg svg{width:11px;height:11px}
+.tl .d1 .hj{background:var(--amber);color:#111418;border-radius:4px;padding:0 5px;font-size:12px}
+.tl .d2{font-weight:700;font-size:15px;line-height:1.25}
+.tl .d3{font-size:12px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl-end{margin:8px 0 0 34px;font-size:12px;color:var(--muted)}
+/* wiki submenu + popover */
+.sub-nav{position:sticky;top:49px;z-index:15;display:flex;gap:8px;padding:10px 0;background:color-mix(in srgb,var(--bg) 92%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.sub-nav button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;min-height:38px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.chipgrid{display:flex;flex-wrap:wrap;gap:8px}
+.chipgrid button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;min-height:44px;text-align:left}
+.pop{position:fixed;inset:0;z-index:65;background:rgba(8,10,12,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.pop .pc{background:var(--bg);color:var(--ink);border-radius:16px;padding:18px 18px 20px;max-width:520px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:8px;margin-bottom:max(8px,env(safe-area-inset-bottom))}
+.pop .pc h3{margin:0;font-size:18px}
+.pop .pc p{margin:0;font-size:15px;line-height:1.6;color:var(--ink-2)}
+.pop .pc small{color:var(--muted);font-size:12px}
+.ship{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.ship .sh{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.ship .sh b{font-size:16px}
+.ship .sh span{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--accent);white-space:nowrap}
+.ship p{margin:0;font-size:14px;color:var(--ink-2)}
+.ship .jp{font-size:16px;font-weight:700;color:var(--ink)}
+.bagdays{display:flex;flex-wrap:wrap;gap:6px}
+.bagdays span{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:46px;height:50px;border-radius:8px;border:1px solid var(--line);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;line-height:1}
+.bagdays span small{font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
+.bagdays span.on{background:var(--amber);border-color:var(--amber);color:#111418}
+.bagdays span.on small{color:#111418}
+.tips li{margin:4px 0;font-size:14px;color:var(--ink-2)}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -320,13 +381,17 @@ footer p{margin:0;flex:1 1 100%}
   </div>
 </header>
 
-<nav class="nav" aria-label="Dias da viagem"><div class="row" id="chips"></div></nav>
+<nav class="nav" aria-label="Seções do site"><div class="row" id="chips"></div></nav>
 
 <main class="wrap" id="app"></main>
 
 <div class="wrap"><footer><p>Horários são sugestões; confirmem o funcionamento das atrações perto da data. As marcações de “visto” ficam salvas só neste aparelho. Fotos: Wikimedia Commons, com o crédito de cada autor nas curiosidades.</p><button class="fbtn" id="themeBtn" type="button">Claro / escuro</button></footer></div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada"><button class="lb-x" id="lbX" type="button" aria-label="Fechar foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure></div>
 <div class="tx" id="tx" hidden role="dialog" aria-modal="true" aria-label="Endereço em japonês para o taxista"><div class="card" lang="ja"><span class="nm" id="txN"></span><span class="ad" id="txA"></span><span class="say">ここまでお願いします。</span><span class="pt" lang="pt-BR">“Por favor, me leve até aqui.” Toque fora para fechar.</span></div></div>
+<button class="dtab" id="dtab" type="button" aria-label="Abrir os dias da viagem" aria-controls="drawer" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><b id="dtabN">20</b><span>DIAS</span></button>
+<div class="dscrim" id="dscrim"></div>
+<aside class="drawer" id="drawer" aria-label="Dias da viagem" aria-hidden="true"><div class="dh"><div><h2>Roteiro · 20 dias</h2><p id="drawerSub">6 a 25 de janeiro</p></div><button class="dx" id="dx" type="button" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="dl" id="drawerList"></div></aside>
+<div class="pop" id="pop" hidden role="dialog" aria-modal="true"><div class="pc" id="popC"></div></div>
 <div class="netpill" id="netpill" hidden>SEM INTERNET · OFFLINE</div>
 
 <script>
@@ -558,12 +623,44 @@ let cur = {day:0, v:0};
 
 function renderChips(){
   const el = document.getElementById("chips");
-  let h = '<button class="chip" type="button" data-day="0" aria-current="'+(cur.day===0)+'">Geral</button>';
-  h += '<button class="chip guide" type="button" data-guide="1" aria-current="'+(cur.day===-1)+'">Guia</button>';
-  DATA.forEach(d => { h += '<button class="chip" type="button" data-day="'+d.n+'" aria-current="'+(cur.day===d.n)+'"><b>'+d.n+'</b>'+esc(SHORT[d.n-1])+'</button>'; });
-  el.innerHTML = h;
-  const active = el.querySelector('[aria-current="true"]');
-  if (active) active.scrollIntoView({block:"nearest", inline:"center"});
+  const T = [[0,"🏠","Geral"],[-1,"💬","Guia"],[-2,"📚","Wiki"],[-3,"🧳","Malas"]];
+  el.innerHTML = T.map(([d,ic,l]) => '<button class="tabn" type="button" data-tab="'+d+'" aria-current="'+(cur.day===d)+'"><span class="ti" aria-hidden="true">'+ic+'</span>'+l+'</button>').join('');
+  const dn = document.getElementById("dtabN"); if (dn){ dn.textContent = cur.day > 0 ? String(cur.day).padStart(2,"0") : ""; dn.hidden = !(cur.day > 0); }
+}
+
+/* ---------- menu lateral (timeline de dias) ---------- */
+let drawerReturn = null;
+function renderDrawer(){
+  const tn = tripDayToday(); let h = '';
+  REGIONS.forEach(([a,b,label], ri) => {
+    h += '<div class="tl-reg" style="--lc:'+LINE[ri]+'">'+esc(label)+'</div>';
+    for (let n=a; n<=b; n++){
+      const [done,total] = countDone(n,0); const d = dateOf(n);
+      h += '<button class="tl'+(done && done===total?' done':'')+'" type="button" data-day="'+n+'" style="--lc:'+LINE[ri]+'" aria-current="'+(cur.day===n)+'"><span class="rail"><span class="node"></span></span><span class="tx2">'
+        + '<span class="d1">Dia '+n+' · '+DOW[d.getDay()]+', '+d.getDate()+'/jan'+(hasBags(n)?'<span class="bg" title="Com as malas grandes">'+ICON_BAG+'</span>':'')+(tn===n?'<span class="hj">HOJE</span>':'')+'</span>'
+        + '<span class="d2">'+esc(CITY_FULL[n-1])+'</span>'+(DATA[n-1].main.title!==CITY_FULL[n-1]?'<span class="d3">'+esc(DATA[n-1].main.title)+'</span>':'')+'</span></button>';
+    }
+  });
+  h += '<p class="tl-end">Volta na madrugada de 26/jan.</p>';
+  document.getElementById("drawerList").innerHTML = h;
+}
+function openDrawer(){
+  renderDrawer();
+  drawerReturn = document.activeElement;
+  document.getElementById("drawer").classList.add("open"); document.getElementById("dscrim").classList.add("open");
+  document.getElementById("drawer").setAttribute("aria-hidden","false"); document.getElementById("dtab").setAttribute("aria-expanded","true");
+  document.body.style.overflow = "hidden";
+  const act = document.querySelector('#drawerList [aria-current="true"]') || document.querySelector('#drawerList .tl');
+  if (act) setTimeout(() => act.scrollIntoView({block:"center"}), 50);
+  setTimeout(() => document.getElementById("dx").focus(), 60);
+}
+function closeDrawer(){
+  const dr = document.getElementById("drawer"); if (!dr.classList.contains("open")) return false;
+  dr.classList.remove("open"); document.getElementById("dscrim").classList.remove("open");
+  dr.setAttribute("aria-hidden","true"); document.getElementById("dtab").setAttribute("aria-expanded","false");
+  document.body.style.overflow = "";
+  if (drawerReturn && document.body.contains(drawerReturn)) { try { drawerReturn.focus({preventScroll:true}); } catch(e) {} }
+  return true;
 }
 
 function renderOverview(){
@@ -593,9 +690,8 @@ function renderDay(){
   const [done,total] = countDone(n,cur.v);
   let h = '<section class="day-head"><div class="big" aria-hidden="true"><small>DIA</small><span>'+String(n).padStart(2,"0")+'</span></div><div><p class="of">Dia '+n+' de 20 · '+fmtDate(n)+'</p><h2>'+esc(p.title)+'</h2></div></section>'
     + '<p class="summary">'+esc(p.summary)+'</p>'
-    + (hasBags(n) ? '<p class="bagnote">'+ICON_BAG+'Dia com as malas grandes</p>' : '')
     + '<div class="wx" id="wx" aria-live="polite"><span class="ico" aria-hidden="true">🌡️</span><span class="wt"><span class="k avg">Clima</span><span class="ex">Carregando…</span></span></div>'
-    + '<p style="margin:6px 2px 0">'+sunLine(n)+'</p>' + yamatoCard(n) + foodPanel(n);
+    + '<p style="margin:6px 2px 0">'+sunLine(n)+'</p>';
   if (ps.length > 1){
     h += '<div class="tabs" role="tablist" aria-label="Versões do dia">';
     ps.forEach((x,i) => { h += '<button class="tab" role="tab" type="button" data-v="'+i+'" aria-selected="'+(i===cur.v)+'">'+esc(x.label)+'</button>'; });
@@ -647,18 +743,18 @@ function toggleStop(i){
   document.getElementById("progBar").style.width = (total?Math.round(done/total*100):0)+"%";
 }
 
-function render(){ renderChips(); if (cur.day===-1) renderGuide(); else if (cur.day===0) renderOverview(); else renderDay(); updateLed(); }
+function render(){ renderChips(); if (cur.day===-1) renderGuide(); else if (cur.day===-2) renderWiki(); else if (cur.day===-3) renderMalas(); else if (cur.day===0) renderOverview(); else renderDay(); updateLed(); }
 
 function go(day, v){
   cur.day = day; cur.v = v||0;
-  const hash = day===-1 ? "#guia" : day ? "#dia-"+day+(cur.v?"-"+cur.v:"") : "#";
+  const hash = day===-1 ? "#guia" : day===-2 ? "#wiki" : day===-3 ? "#malas" : day ? "#dia-"+day+(cur.v?"-"+cur.v:"") : "#";
   if (location.hash !== hash) history.replaceState(null, "", hash || " ");
   render();
-  window.scrollTo({top: day ? document.querySelector(".nav").offsetTop : 0, behavior:"smooth"});
+  window.scrollTo({top: day ? document.querySelector(".nav").offsetTop : 0, behavior:"auto"});
 }
 function fromHash(){
   const m = location.hash.match(/^#dia-(\d+)(?:-(\d+))?$/);
-  if (m){ const n = Math.min(20, Math.max(1, +m[1])); cur.day = n; cur.v = +(m[2]||0); } else if (location.hash === "#guia"){ cur.day = -1; cur.v = 0; } else { cur.day = 0; cur.v = 0; }
+  if (m){ const n = Math.min(20, Math.max(1, +m[1])); cur.day = n; cur.v = +(m[2]||0); } else if (location.hash === "#guia"){ cur.day = -1; cur.v = 0; } else if (location.hash === "#wiki"){ cur.day = -2; cur.v = 0; } else if (location.hash === "#malas"){ cur.day = -3; cur.v = 0; } else { cur.day = 0; cur.v = 0; }
 }
 
 
@@ -786,9 +882,41 @@ function renderGuide(){
     h += panel('💬', esc(g), list.map(x => '<div class="ph"><span class="j" lang="ja">'+esc(x[0])+'</span><button class="say" type="button" data-say="'+esc(x[0].replace(/〜/g,""))+'" aria-label="Ouvir: '+esc(x[2])+'">'+ICON_SPK+'</button><span class="r">'+esc(x[1])+'</span><span class="t">'+esc(x[2])+'</span></div>').join(''));
   });
   h += '<p class="note" style="font-size:12px;color:var(--muted);margin:8px 0 0">O áudio usa a voz japonesa do próprio celular e funciona sem internet na maioria dos aparelhos.</p>';
-  h += '<h2 class="section-title">Etiqueta rápida</h2><div>' + GUIDE.etiq.map(e => '<div class="et"><b>'+esc(e[0])+'</b>'+esc(e[1])+'</div>').join('') + '</div>';
-  h += '<h2 class="section-title">O que provar</h2>';
-  Object.values(GUIDE.food).forEach(f => { h += panel('🍜', esc(f[0]), f[1].map(x => '<div class="fd"><b>'+esc(x[0])+'</b>'+esc(x[1])+'</div>').join('')); });
+  h += '</div>';
+  document.getElementById("app").innerHTML = h;
+}
+function renderWiki(){
+  let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>WIKI</small><span>📚</span></div><div><p class="of">Saber antes de ir</p><h2>Wiki da viagem</h2></div></section>';
+  h += '<nav class="sub-nav" aria-label="Tópicos da wiki"><button type="button" data-jump="w-etiq">🙇 Etiqueta</button><button type="button" data-jump="w-food">🍜 Comida</button></nav>';
+  h += '<h2 class="section-title" id="w-etiq">Etiqueta rápida</h2><p style="margin:0 0 10px;font-size:14px;color:var(--ink-2)">Toque num tema para ver a explicação.</p><div class="chipgrid">'
+    + GUIDE.etiq.map((e,i) => '<button type="button" data-etiq="'+i+'">'+esc(e[0])+'</button>').join('') + '</div>';
+  h += '<h2 class="section-title" id="w-food">O que provar em cada cidade</h2>';
+  const seen = new Set(); const order = [];
+  GUIDE.foodDay.forEach((k,i) => { if (!seen.has(k)){ seen.add(k); order.push([k,i+1]); } });
+  order.forEach(([k,firstDay]) => { const f = GUIDE.food[k]; h += panel('🍜', esc(f[0])+' · a partir do dia '+firstDay, f[1].map(x => '<div class="fd"><b>'+esc(x[0])+'</b>'+esc(x[1])+'</div>').join('')); });
+  h += '</div>';
+  document.getElementById("app").innerHTML = h;
+}
+function openPop(html){ document.getElementById("popC").innerHTML = html; document.getElementById("pop").hidden = false; }
+function closePop(){ const p = document.getElementById("pop"); if (p.hidden) return false; p.hidden = true; return true; }
+function renderMalas(){
+  let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>MALAS</small><span>🧳</span></div><div><p class="of">Transferência pela Yamato</p><h2>Malas grandes</h2></div></section>';
+  h += '<h2 class="section-title">Dias com as malas grandes</h2><div class="bagdays">';
+  for (let dm=5; dm<=25; dm++){ const on = dm===5 || BAG_DAYS.has(dm); h += '<span class="'+(on?'on':'')+'">'+dm+'<small>'+(dm===5?'chega':DOW[new Date(2027,0,dm).getDay()])+'</small></span>'; }
+  h += '</div><p style="margin:8px 0 0;font-size:13px;color:var(--muted)">Em amarelo, os dias com as malas grandes. Nos outros, só com a mochila.</p>';
+  h += '<h2 class="section-title">Envios</h2>';
+  h += '<div class="ship"><div class="sh"><b>Opcional · noite de 6/jan</b><span>Tóquio → Quioto</span></div><p>Deixar as malas na recepção na noite do dia 6, com entrega marcada para 8/jan, dá um dia de folga se a neve atrasar o caminhão. No dia 7 vocês saem para Hakone só com a mochila.</p></div>';
+  [[2,"Qui, 7/jan","Tóquio → Quioto","8/jan","no check-out, antes de ir para Hakone"],[7,"Ter, 12/jan","Quioto → Nagoya","15/jan","no check-out, antes do Fushimi Inari"],[12,"Dom, 17/jan","Nagoya → Tóquio","20/jan","no check-out, antes do trem para Takayama"]].forEach(([n,dt,route,del,when]) => {
+    const y = YAMATO[n]; const phrase = "この荷物を宅急便で次のホテルへ送りたいです。"+y.jp+"に届くようにお願いします。";
+    h += '<div class="ship"><div class="sh"><b>'+dt+'</b><span>'+route+'</span></div><p>Entregar '+when+'. Entrega marcada para <b>'+del+'</b>, dia do check-in.</p>'
+      + '<p class="jp" lang="ja">'+phrase+'</p>'
+      + '<div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="sbtn" type="button" data-say="'+esc(phrase)+'">'+ICON_SPK+'Ouvir</button><button class="sbtn" type="button" data-yfull="'+n+'">Mostrar em tela cheia</button></div></div>';
+  });
+  h += '<h2 class="section-title">Dicas</h2><ul class="tips">'
+    + '<li>Perguntem no check-in até que horas a Yamato passa para coletar. Mala entregue depois disso só sai no dia seguinte.</li>'
+    + '<li>Marquem a entrega para o dia do check-in no próximo hotel, para ele não precisar guardar a mala antes.</li>'
+    + '<li>No envio para Quioto, peçam entrega de manhã (午前中) ou das 14h às 16h.</li>'
+    + '<li>Guardem o comprovante: o número dele serve para rastrear a mala no site da Yamato.</li></ul>';
   h += '<h2 class="section-title">Mochila para as noites sem as malas</h2><p style="margin:0 0 6px;font-size:14px;color:var(--ink-2)">Hakone (7/jan), Hiroshima (12 a 14/jan) e Takayama/Kanazawa (17 a 19/jan).</p>'
     + GUIDE.pack.map((x,i) => '<label class="pk"><input type="checkbox" data-pack="'+i+'"'+(packSt[i]?' checked':'')+'>'+esc(x)+'</label>').join('');
   h += '</div>';
@@ -895,7 +1023,7 @@ function closeLB(){
   document.getElementById("lbImg").removeAttribute("src");
   if (lbReturn) { try { lbReturn.focus({preventScroll:true}); } catch(e) {} }
 }
-document.addEventListener("keydown", e => { if (e.key === "Escape"){ closeLB(); const t = document.getElementById("tx"); if (!t.hidden){ t.hidden = true; document.body.style.overflow = ""; } } });
+document.addEventListener("keydown", e => { if (e.key === "Escape"){ closeDrawer(); closePop(); closeLB(); const t = document.getElementById("tx"); if (!t.hidden){ t.hidden = true; document.body.style.overflow = ""; } } });
 
 /* ---------- offline ---------- */
 let offBusy = false;
@@ -942,7 +1070,13 @@ async function downloadAll(){
 
 document.addEventListener("click", e => {
   if (calcClick(e)) return;
-  const gb = e.target.closest("[data-guide]"); if (gb){ go(-1, 0); return; }
+  if (!document.getElementById("pop").hidden){ if (!e.target.closest("#popC")) closePop(); return; }
+  if (e.target.closest("#dtab")){ openDrawer(); return; }
+  if (e.target.closest("#dx") || e.target.id === "dscrim"){ closeDrawer(); return; }
+  const tl = e.target.closest("#drawerList [data-day]"); if (tl){ closeDrawer(); go(+tl.dataset.day, 0); return; }
+  const tb = e.target.closest("[data-tab]"); if (tb){ go(+tb.dataset.tab, 0); return; }
+  const jp = e.target.closest("[data-jump]"); if (jp){ const t = document.getElementById(jp.dataset.jump); if (t) window.scrollTo({top: t.getBoundingClientRect().top + window.scrollY - 110, behavior:"smooth"}); return; }
+  const et = e.target.closest("[data-etiq]"); if (et){ const x = GUIDE.etiq[+et.dataset.etiq]; openPop('<h3>'+esc(x[0])+'</h3><p>'+esc(x[1])+'</p><small>Toque fora para fechar.</small>'); return; }
   const sb = e.target.closest("[data-say]"); if (sb){ say(sb.dataset.say); return; }
   const yf = e.target.closest("[data-yfull]"); if (yf){ const y = YAMATO[+yf.dataset.yfull]; document.getElementById("txN").textContent = "宅急便（ヤマト運輸）"; document.getElementById("txA").textContent = "この荷物を宅急便で次のホテルへ送りたいです。"+y.jp+"に届くようにお願いします。"; document.getElementById("tx").hidden = false; document.body.style.overflow = "hidden"; return; }
   if (e.target.closest("#offBtn")){ downloadAll(); return; }
