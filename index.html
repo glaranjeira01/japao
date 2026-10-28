@@ -197,8 +197,8 @@ a{color:inherit}
 .fimg{width:56px;height:56px;border-radius:8px;background:var(--paper-2);overflow:hidden;display:block}
 .fimg img{width:100%;height:100%;object-fit:cover;display:block}
 .fimg.none{background:var(--paper-2) center/22px no-repeat}
-.pop.tall{align-items:stretch;padding:40px 10px 10px}
-.pop.tall .pc{max-width:680px;margin:0 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.pop.tall{align-items:flex-end;padding:40px 10px 10px}
+.pop.tall .pc{max-width:680px;margin:0 auto;max-height:calc(100dvh - 60px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .reader{display:flex;flex-direction:column;gap:12px}
 .reader .rk{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 .reader h3{margin:0;font-size:26px}
@@ -386,7 +386,7 @@ details.pn .pbody p + p{margin-top:10px}
 .shc .se{font-size:26px;padding:10px 12px 0;line-height:1}
 .shc .t{font-weight:700}
 .fabr{bottom:calc(78px + env(safe-area-inset-bottom));font-size:24px;line-height:1}
-.rdr .rst{font-size:14px;color:var(--ink-2);margin:4px 0 12px}
+.rdr .rst{font-size:14px;color:var(--ink-2);margin:6px 0 12px;line-height:1.5}
 .rdr .rst .lnk{border:0;background:none;color:var(--accent);font:inherit;font-weight:700;cursor:pointer;text-decoration:underline;padding:0 0 0 4px}
 .rdr .rdemo{background:color-mix(in srgb,var(--amber) 14%,var(--bg));border:1px solid color-mix(in srgb,var(--amber) 45%,var(--line));border-radius:10px;padding:8px 10px}
 .rdr .rsm{font-size:12.5px;color:var(--muted);margin:12px 0}
@@ -595,6 +595,7 @@ footer p{margin:0;flex:1 1 100%}
 <button class="dtab" id="dtab" type="button" aria-label="Abrir os dias da viagem" aria-controls="drawer" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><b id="dtabN">20</b><span>DIAS</span></button>
 <div class="dscrim" id="dscrim"></div>
 <aside class="drawer" id="drawer" aria-label="Dias da viagem" aria-hidden="true"><div class="dh"><div><h2>Roteiro · 20 dias</h2><p id="drawerSub">6 a 25 de janeiro</p></div><button class="dx" id="dx" type="button" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="dl" id="drawerList"></div></aside>
+<aside class="drawer" id="rdrawer" aria-label="Radar" aria-hidden="true"><div class="dh"><div><h2>📡 Radar</h2><p>O que tem perto de vocês</p></div><button class="dx" id="rdx" type="button" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="dl rdr" id="rdrList"></div></aside>
 <div class="pop" id="pop" hidden role="dialog" aria-modal="true"><div class="pc" id="popC"></div></div>
 <button class="fab fabr" id="fabR" type="button" aria-label="Radar: o que tem perto de mim">📡</button>
 <button class="fab" id="fabS" type="button" aria-label="Buscar no site"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
@@ -807,28 +808,44 @@ let radarPos = null, radarReal = false;
 const RADAR_DEMO_UNTIL = Date.parse("2027-01-05T12:00:00+09:00");
 const radarDemo = () => Date.now() < RADAR_DEMO_UNTIL && !radarReal;
 function radarHtml(){
-  let h = '<div class="reader rdr"><p class="rk">📡 Radar</p><h3>O que tem perto de vocês</h3>';
-  if (!radarPos) return h + '<p class="rst" id="rst">Pegando a localização do celular…</p><p class="rsm">Na primeira vez, o celular pergunta se pode usar a localização: toquem em “Permitir”.</p><button class="sbtn" type="button" data-closepop="1">Fechar</button></div>';
+  let h = '';
+  if (!radarPos) return '<p class="rst" id="rst">Pegando a localização do celular…</p><p class="rsm">Na primeira vez, o celular pergunta se pode usar a localização: toquem em “Permitir”.</p>';
   const {lat, lon, acc, at} = radarPos, ll = lat.toFixed(5)+','+lon.toFixed(5);
   const ago = Math.round((Date.now()-at)/60000);
   h += radarPos.demo
     ? '<p class="rst rdemo">🧪 Modo demonstração: até a viagem, o radar usa um ponto perto do Fushimi Inari, em Quioto. <button class="lnk" type="button" data-radar="real">Usar minha localização</button></p>'
     : '<p class="rst">📍 Localização '+(ago<1?'agora':'de '+ago+' min atrás')+' · precisão de ~'+Math.round(acc)+' m <button class="lnk" type="button" data-radar="1">Atualizar</button></p>';
   h += '<div class="rgrid">' + RADAR.map(r => '<a class="rbtn" href="https://www.google.com/maps/search/'+encodeURIComponent(r[2])+'/@'+ll+',15z" target="_blank" rel="noopener"><span aria-hidden="true">'+r[0]+'</span>'+r[1]+'</a>').join('') + '</div>';
-  h += '<p class="rsm">Abre o Google Maps já centrado onde vocês estão, mostrando o que existe num raio de cerca de 1 km. No Maps, dá para filtrar por “Aberto agora” e por nota.</p><button class="sbtn" type="button" data-closepop="1">Fechar</button></div>';
+  h += '<p class="rsm">Abre o Google Maps já centrado onde vocês estão, mostrando o que existe num raio de cerca de 1 km. No Maps, dá para filtrar por “Aberto agora” e por nota.</p>';
   return h;
 }
-function openRadar(real){
+let rdReturn = null;
+function rdPaint(){ document.getElementById("rdrList").innerHTML = radarHtml(); }
+function rdShow(){
+  const dr = document.getElementById("rdrawer"); if (dr.classList.contains("open")) return;
+  rdReturn = document.activeElement; closePop(); closeDrawer();
+  dr.classList.add("open"); document.getElementById("dscrim").classList.add("open"); dr.setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
+  setTimeout(() => { try { document.getElementById("rdx").focus({preventScroll:true}); } catch(e) {} }, 50);
+}
+function closeRadar(){
+  const dr = document.getElementById("rdrawer"); if (!dr.classList.contains("open")) return false;
+  dr.classList.remove("open"); document.getElementById("dscrim").classList.remove("open"); dr.setAttribute("aria-hidden","true");
+  document.body.style.overflow = "";
+  if (rdReturn && document.body.contains(rdReturn)) { try { rdReturn.focus({preventScroll:true}); } catch(e) {} }
+  return true;
+}
+function openRadar(real, refresh){
   if (real){ radarReal = true; radarPos = null; }
-  if (radarDemo()){ radarPos = {lat: 34.9671, lon: 135.7727, acc: 0, at: Date.now(), demo: true}; openPop(radarHtml()); document.getElementById("pop").classList.add("tall"); return; }
+  rdShow();
+  if (radarDemo()){ radarPos = {lat: 34.9671, lon: 135.7727, acc: 0, at: Date.now(), demo: true}; rdPaint(); return; }
   if (radarPos && radarPos.demo) radarPos = null;
-  openPop(radarHtml()); document.getElementById("pop").classList.add("tall");
-  if (radarPos && Date.now() - radarPos.at < 120000 && !document.activeElement?.dataset?.radar) return;
-  if (!("geolocation" in navigator)){ const el = document.getElementById("rst"); if (el) el.textContent = "Este navegador não oferece localização."; return; }
-  if (radarPos){ radarPos = null; openPop(radarHtml()); document.getElementById("pop").classList.add("tall"); }
+  if (radarPos && Date.now() - radarPos.at < 120000 && !refresh){ rdPaint(); return; }
+  radarPos = null; rdPaint();
+  if (!("geolocation" in navigator)){ document.getElementById("rst").textContent = "Este navegador não oferece localização."; return; }
   navigator.geolocation.getCurrentPosition(p => {
     radarPos = {lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy || 0, at: Date.now()};
-    if (!document.getElementById("pop").hidden && document.querySelector("#popC .rdr")) document.getElementById("popC").innerHTML = radarHtml();
+    rdPaint();
   }, err => {
     const el = document.getElementById("rst"); if (!el) return;
     el.innerHTML = (err.code === 1 ? "Sem permissão para usar a localização. Liberem a localização para este site nos ajustes do navegador e tentem de novo." : "Não deu para achar a localização agora. Confiram se o GPS está ligado.") + ' <button class="lnk" type="button" data-radar="1">Tentar de novo</button>';
@@ -1548,7 +1565,7 @@ function closeLB(){
   document.getElementById("lbImg").removeAttribute("src");
   if (lbReturn) { try { lbReturn.focus({preventScroll:true}); } catch(e) {} }
 }
-document.addEventListener("keydown", e => { if (e.key === "Escape"){ closeSearch(); closeDrawer(); closePop(); closeLB(); const t = document.getElementById("tx"); if (!t.hidden){ t.hidden = true; document.body.style.overflow = ""; } } });
+document.addEventListener("keydown", e => { if (e.key === "Escape"){ closeSearch(); closeDrawer(); closeRadar(); closePop(); closeLB(); const t = document.getElementById("tx"); if (!t.hidden){ t.hidden = true; document.body.style.overflow = ""; } } });
 
 /* ---------- offline ---------- */
 let offBusy = false;
@@ -1596,11 +1613,13 @@ async function downloadAll(){
 document.addEventListener("click", e => {
   if (calcClick(e)) return;
   if (e.target.closest("#fabS")){ openSearch(); return; }
-  if (e.target.closest("#fabR") || e.target.closest("#popC [data-radar]")){ const rb = e.target.closest("#popC [data-radar]"); openRadar(rb && rb.dataset.radar === "real"); return; }
+  if (e.target.closest("#fabR")){ openRadar(false, false); return; }
+  const rb = e.target.closest("#rdrList [data-radar]"); if (rb){ openRadar(rb.dataset.radar === "real", true); return; }
+  if (e.target.closest("#rdx")){ closeRadar(); return; }
   if (!document.getElementById("srch").hidden){ if (e.target.closest("#srX")){ closeSearch(); return; } const r = e.target.closest("[data-sr]"); if (r){ const x = SRES[+r.dataset.sr]; closeSearch(); x.act(); } return; }
   if (!document.getElementById("pop").hidden){ const ps = e.target.closest("#popC [data-say]"); if (ps){ say(ps.dataset.say); return; } const pd = e.target.closest("#popC [data-goday]"); if (pd){ closePop(); go(+pd.dataset.goday, 0); return; } if (!e.target.closest("#popC") || e.target.closest("[data-closepop]")) closePop(); return; }
   if (e.target.closest("#dtab")){ openDrawer(); return; }
-  if (e.target.closest("#dx") || e.target.id === "dscrim"){ closeDrawer(); return; }
+  if (e.target.closest("#dx") || e.target.id === "dscrim"){ closeDrawer(); closeRadar(); return; }
   const tl = e.target.closest("#drawerList [data-day]"); if (tl){ closeDrawer(); go(+tl.dataset.day, 0); return; }
   const tb = e.target.closest("[data-tab]"); if (tb){ go(+tb.dataset.tab, 0); return; }
   const jp = e.target.closest("[data-jump]"); if (jp){ const t = document.getElementById(jp.dataset.jump); if (t) window.scrollTo({top: t.getBoundingClientRect().top + window.scrollY - 110, behavior:"smooth"}); return; }
