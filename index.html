@@ -382,6 +382,7 @@ details.pn .pbody p + p{margin-top:10px}
 .shn button{white-space:nowrap;border-color:color-mix(in srgb,var(--lc) 45%,var(--line))}
 .shn button[aria-pressed="true"]{background:var(--lc);color:#fff;border-color:var(--lc)}
 .shg .shc{text-decoration:none;min-height:104px}
+.shb{margin-top:14px}
 .shc .se{font-size:26px;padding:10px 12px 0;line-height:1}
 .shc .t{font-weight:700}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
@@ -835,16 +836,25 @@ function goPanel(page, sel, key){
   }, 60);
 }
 let shopCity = null;
+const SHOP_DAYS = {"tky-shiba":"Dia 1","tky-shibuya":"Dia 17","tky-ginza":"Dia 19","tky-akiba":"Dia 19","tky-asakusa":"Dias 15–20","tky-ikebukuro":"Dia 18","tky-ueno":"Dia 15","tky-odaiba":"Dia 20","hakone":"Dia 2","kyoto":"Dias 3–7","nara":"Dia 6","hiroshima":"Dias 7–8","miyajima":"Dia 9","okayama":"Dia 10","nagoya":"Dias 10–12","takayama":"Dias 12–13","shirakawa":"Dia 13","kanazawa":"Dia 14","kamakura":"Dia 16"};
 function renderShops(){
-  if (shopCity == null){ const tn = tripDayToday(); const i = tn ? EXTRA.shops.findIndex(c => c[2] === tn) : -1; shopCity = i >= 0 ? i : 0; }
-  const c = EXTRA.shops[shopCity];
   let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>LOJAS</small><span>🛍️</span></div><div><p class="of">Compras por cidade</p><h2>Onde comprar</h2></div></section>';
-  h += '<p class="lead" style="margin-top:12px">Escolham a cidade. Cada botão abre o Google Maps com a lista de lugares daquele tipo na região; no celular, abre no app.</p>';
-  h += '<nav class="sub-nav shn" aria-label="Cidades">' + EXTRA.shops.map((x,i) => '<button type="button" data-shop="'+i+'" aria-pressed="'+(i===shopCity)+'" style="--lc:'+LINE[regionOf(x[2])]+'">'+esc(x[1].replace("Tóquio · ","Tóquio: "))+'</button>').join('') + '</nav>';
-  h += '<h2 class="section-title">'+esc(c[1])+'</h2><div class="grid shg">' + c[3].map(b => '<a class="card shc" href="'+b[2]+'" target="_blank" rel="noopener" style="--lc:'+LINE[regionOf(c[2])]+'"><span class="se" aria-hidden="true">'+b[0]+'</span><span class="t">'+esc(b[1])+'</span><span class="p">Abrir no Maps ↗</span></a>').join('') + '</div>';
-  h += '<p class="note" style="font-size:12px;color:var(--muted);margin:12px 0 0">São buscas do Google Maps, não uma lista fixa: os resultados mudam com o tempo e mostram horário, fotos e avaliações de cada loja.</p></div>';
+  if (shopCity == null){
+    h += '<p class="lead" style="margin-top:12px">Escolham a cidade ou o bairro. Cada categoria abre o Google Maps com a lista de lugares daquela região.</p>';
+    const order = EXTRA.shops.map((c,i) => [c,i]).sort((x,y) => x[0][2]-y[0][2]);
+    REGIONS.forEach(([a,b,label], ri) => {
+      const items = order.filter(([c]) => regionOf(c[2]) === ri); if (!items.length) return;
+      h += '<h2 class="section-title">'+esc(label)+'</h2><div class="grid">';
+      items.forEach(([c,i]) => { h += '<button class="card" type="button" data-shop="'+i+'" style="--lc:'+LINE[ri]+'"><span class="n">'+esc(SHOP_DAYS[c[0]]||'')+'</span><span class="t">'+esc(c[1])+'</span><span class="p">'+c[3].length+' categorias</span></button>'; });
+      h += '</div>';
+    });
+    h += '<p class="note" style="font-size:12px;color:var(--muted);margin:14px 0 0">São buscas do Google Maps, não uma lista fixa: os resultados mostram horário, fotos e avaliações de cada loja.</p></div>';
+  } else {
+    const c = EXTRA.shops[shopCity], lc = LINE[regionOf(c[2])];
+    h += '<button class="sbtn shb" type="button" data-shop="-1">← Todas as cidades</button>';
+    h += '<h2 class="section-title" style="color:'+lc+'">'+esc(c[1])+'</h2><p class="lead" style="margin:-4px 0 10px">'+esc(SHOP_DAYS[c[0]]||'')+' · toque numa categoria para abrir no Maps</p><div class="grid shg">' + c[3].map(b => '<a class="card shc" href="'+b[2]+'" target="_blank" rel="noopener" style="--lc:'+lc+'"><span class="se" aria-hidden="true">'+b[0]+'</span><span class="t">'+esc(b[1])+'</span><span class="p">Abrir no Maps ↗</span></a>').join('') + '</div></div>';
+  }
   document.getElementById("app").innerHTML = h;
-  const act = document.querySelector('.shn [aria-pressed="true"]'); if (act) act.scrollIntoView({block:"nearest", inline:"center"});
 }
 function renderTrains(){
   let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>TRENS</small><span>🚆</span></div><div><p class="of">Como se locomover</p><h2>Trens e transporte</h2></div></section>';
@@ -1551,7 +1561,7 @@ document.addEventListener("click", e => {
   const ct = e.target.closest("[data-city]"); if (ct){ openReader(+ct.dataset.city); return; }
   const gt = e.target.closest("[data-gt]"); if (gt){ const [sl,tl] = gt.dataset.gt.split("|"); const t = (document.getElementById("gtIn").value||"").trim(); window.open("https://translate.google.com/?sl="+sl+"&tl="+tl+"&op=translate"+(t?"&text="+encodeURIComponent(t):""), "_blank", "noopener"); return; }
   const mq = e.target.closest("[data-mq]"); if (mq){ document.getElementById("mJPY").value = (+mq.dataset.mq).toLocaleString("pt-BR"); miniSync(); return; }
-  const sh = e.target.closest("[data-shop]"); if (sh){ shopCity = +sh.dataset.shop; renderShops(); return; }
+  const sh = e.target.closest("[data-shop]"); if (sh){ const v = +sh.dataset.shop; shopCity = v < 0 ? null : v; renderShops(); const hero = document.querySelector(".hero"); window.scrollTo({top: hero.offsetTop + hero.offsetHeight}); return; }
   const hi = e.target.closest("[data-hist]"); if (hi){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+hi.dataset.hist]; openPop('<div class="reader"><p class="rk">📖 História</p><h3>'+esc(st.name)+'</h3>'+[].concat(st.hist).map(x => '<p>'+esc(x)+'</p>').join('')+'<button class="sbtn" type="button" data-closepop="1">Fechar</button></div>'); document.getElementById("pop").classList.add("tall"); document.getElementById("popC").scrollTop = 0; return; }
   const cu = e.target.closest("[data-cur]"); if (cu){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+cu.dataset.cur], ph = photo[st.name];
     const cred = ph ? '<p class="credit">Foto: '+(ph.artist ? esc(ph.artist.slice(0,80)) : 'autor na página da imagem')+(ph.license?' · '+esc(ph.license):'')+' · <a href="https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(ph.file)+'" target="_blank" rel="noopener">Wikimedia Commons</a></p>' : '';
