@@ -388,6 +388,7 @@ details.pn .pbody p + p{margin-top:10px}
 .fabr{bottom:calc(78px + env(safe-area-inset-bottom));font-size:24px;line-height:1}
 .rdr .rst{font-size:14px;color:var(--ink-2);margin:4px 0 12px}
 .rdr .rst .lnk{border:0;background:none;color:var(--accent);font:inherit;font-weight:700;cursor:pointer;text-decoration:underline;padding:0 0 0 4px}
+.rdr .rdemo{background:color-mix(in srgb,var(--amber) 14%,var(--bg));border:1px solid color-mix(in srgb,var(--amber) 45%,var(--line));border-radius:10px;padding:8px 10px}
 .rdr .rsm{font-size:12.5px;color:var(--muted);margin:12px 0}
 .rgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .rbtn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);text-decoration:none;font-size:14px;font-weight:600;padding:10px;min-height:48px;line-height:1.25}
@@ -802,18 +803,25 @@ const RADAR = [
  ["⛩️","Templos e santuários","temples and shrines"],["📸","Atrações turísticas","tourist attractions"],["🏛️","Museus","museums"],["🌳","Parques e jardins","parks gardens"],
  ["🛍️","Lojas","shopping"],["🏪","Konbini","convenience store"],["💊","Farmácias","drugstore"],["🏧","Caixa eletrônico","7-Eleven ATM"],["🚻","Banheiros","public toilet"]
 ];
-let radarPos = null;
+let radarPos = null, radarReal = false;
+const RADAR_DEMO_UNTIL = Date.parse("2027-01-05T12:00:00+09:00");
+const radarDemo = () => Date.now() < RADAR_DEMO_UNTIL && !radarReal;
 function radarHtml(){
   let h = '<div class="reader rdr"><p class="rk">📡 Radar</p><h3>O que tem perto de vocês</h3>';
   if (!radarPos) return h + '<p class="rst" id="rst">Pegando a localização do celular…</p><p class="rsm">Na primeira vez, o celular pergunta se pode usar a localização: toquem em “Permitir”.</p><button class="sbtn" type="button" data-closepop="1">Fechar</button></div>';
   const {lat, lon, acc, at} = radarPos, ll = lat.toFixed(5)+','+lon.toFixed(5);
   const ago = Math.round((Date.now()-at)/60000);
-  h += '<p class="rst">📍 Localização '+(ago<1?'agora':'de '+ago+' min atrás')+' · precisão de ~'+Math.round(acc)+' m <button class="lnk" type="button" data-radar="1">Atualizar</button></p>';
+  h += radarPos.demo
+    ? '<p class="rst rdemo">🧪 Modo demonstração: até a viagem, o radar usa um ponto perto do Fushimi Inari, em Quioto. <button class="lnk" type="button" data-radar="real">Usar minha localização</button></p>'
+    : '<p class="rst">📍 Localização '+(ago<1?'agora':'de '+ago+' min atrás')+' · precisão de ~'+Math.round(acc)+' m <button class="lnk" type="button" data-radar="1">Atualizar</button></p>';
   h += '<div class="rgrid">' + RADAR.map(r => '<a class="rbtn" href="https://www.google.com/maps/search/'+encodeURIComponent(r[2])+'/@'+ll+',15z" target="_blank" rel="noopener"><span aria-hidden="true">'+r[0]+'</span>'+r[1]+'</a>').join('') + '</div>';
   h += '<p class="rsm">Abre o Google Maps já centrado onde vocês estão, mostrando o que existe num raio de cerca de 1 km. No Maps, dá para filtrar por “Aberto agora” e por nota.</p><button class="sbtn" type="button" data-closepop="1">Fechar</button></div>';
   return h;
 }
-function openRadar(){
+function openRadar(real){
+  if (real){ radarReal = true; radarPos = null; }
+  if (radarDemo()){ radarPos = {lat: 34.9671, lon: 135.7727, acc: 0, at: Date.now(), demo: true}; openPop(radarHtml()); document.getElementById("pop").classList.add("tall"); return; }
+  if (radarPos && radarPos.demo) radarPos = null;
   openPop(radarHtml()); document.getElementById("pop").classList.add("tall");
   if (radarPos && Date.now() - radarPos.at < 120000 && !document.activeElement?.dataset?.radar) return;
   if (!("geolocation" in navigator)){ const el = document.getElementById("rst"); if (el) el.textContent = "Este navegador não oferece localização."; return; }
@@ -1588,7 +1596,7 @@ async function downloadAll(){
 document.addEventListener("click", e => {
   if (calcClick(e)) return;
   if (e.target.closest("#fabS")){ openSearch(); return; }
-  if (e.target.closest("#fabR") || e.target.closest("#popC [data-radar]")){ openRadar(); return; }
+  if (e.target.closest("#fabR") || e.target.closest("#popC [data-radar]")){ const rb = e.target.closest("#popC [data-radar]"); openRadar(rb && rb.dataset.radar === "real"); return; }
   if (!document.getElementById("srch").hidden){ if (e.target.closest("#srX")){ closeSearch(); return; } const r = e.target.closest("[data-sr]"); if (r){ const x = SRES[+r.dataset.sr]; closeSearch(); x.act(); } return; }
   if (!document.getElementById("pop").hidden){ const ps = e.target.closest("#popC [data-say]"); if (ps){ say(ps.dataset.say); return; } const pd = e.target.closest("#popC [data-goday]"); if (pd){ closePop(); go(+pd.dataset.goday, 0); return; } if (!e.target.closest("#popC") || e.target.closest("[data-closepop]")) closePop(); return; }
   if (e.target.closest("#dtab")){ openDrawer(); return; }
