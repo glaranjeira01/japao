@@ -1,4 +1,4 @@
-/* v2 · Service worker do roteiro: deixa o site, as fontes e as fotos disponíveis sem internet. */
+/* v3 · Service worker do roteiro: deixa o site, as fontes e as fotos disponíveis sem internet. */
 const SHELL = "jp-shell-v1";
 const MEDIA = "jp-media-v1";
 const SHELL_FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-180.png"];
@@ -30,7 +30,7 @@ self.addEventListener("fetch", e => {
       try {
         const ctrl = new AbortController();
         const t = setTimeout(() => ctrl.abort(), 5000);
-        const r = await fetch(req, { signal: ctrl.signal });
+        const r = await fetch(req.url, { signal: ctrl.signal, cache: "no-cache", credentials: "same-origin" });
         clearTimeout(t);
         if (r.ok) await c.put("index.html", r.clone());
         return r;
