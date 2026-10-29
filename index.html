@@ -426,6 +426,15 @@ details.pn .pbody p + p{margin-top:10px}
 .offbar[hidden]{display:none}
 .offbar b{color:#FFB020}
 .offbar button{border:0;background:none;color:#9AA3AD;font-size:16px;cursor:pointer;padding:4px}
+.tide{margin-top:10px;border:1px solid color-mix(in srgb,#2E6FD8 40%,var(--line));border-left:4px solid #2E6FD8;border-radius:12px;padding:10px 12px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
+.tide h3{margin:0;font-size:15px}
+.tide p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.tide .tn{font-size:12px;color:var(--muted)}
+.tide svg{width:100%;height:auto;display:block}
+.tide svg text{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;fill:var(--ink)}
+.tide svg text.ax{fill:var(--muted);font-weight:600}
+.tide .tlinks{display:flex;flex-wrap:wrap;gap:6px}
+.tide .tlinks a{text-decoration:none}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -1170,6 +1179,7 @@ function renderDay(){
     + '<p class="summary">'+esc(p.summary)+'</p>'
     + '<div class="wx" id="wx" aria-live="polite"><span class="ico" aria-hidden="true">🌡️</span><span class="wt"><span class="k avg">Clima</span><span class="ex">Carregando…</span></span></div>'
     + '<div class="wear" id="wear" hidden></div>'
+    + (n === 9 ? tideCard() : '')
     + '<p style="margin:6px 2px 0">'+sunLine(n)+'</p>';
   if (ps.length > 1){
     h += '<div class="tabs" role="tablist" aria-label="Versões do dia">';
@@ -1216,7 +1226,7 @@ function renderDay(){
   document.getElementById("app").innerHTML = h;
   paintPhotos();
   loadDayPhotos(n).then(() => { if (cur.day===n) paintPhotos(); });
-  loadWeather(n);
+  loadWeather(n); if (n === 9) loadTide();
   markNext(); updateLed();
 }
 
@@ -1626,6 +1636,38 @@ function setWear(n, mx, mn, rain, snow, fc){
   if (n === 20) t.push("No teamLab Planets anda-se descalço e com a calça dobrada: calça que suba fácil até o joelho.");
   w.innerHTML = '<b>🧥 O que vestir'+(fc?' (pela previsão)':' (pela média)')+'</b><ul>'+t.map(x => '<li>'+x+'</li>').join('')+'</ul>';
   w.hidden = false;
+}
+const TIDE_DAY = "2027-01-14", TIDE_LL = [34.2960, 132.3190];
+function tideCard(){
+  return '<section class="tide" aria-labelledby="tdT"><div class="th"><h3 id="tdT">🌊 Maré em Miyajima · 14/jan</h3></div>'
+    + '<div id="tideLive" class="tlive"><p class="tm">A curva de maré do dia aparece aqui cerca de uma semana antes, com os horários de maré alta e baixa.</p></div>'
+    + '<p>Na quinta, 14/jan, a lua está perto do quarto crescente: é uma <b>maré de quadratura</b>, com pouca diferença entre alta e baixa. Segundo o turismo local, dá para caminhar até o torii quando a maré fica abaixo de cerca de 100 cm, e ele parece flutuar acima de cerca de 250 cm; com maré fraca, talvez nenhum dos dois extremos aconteça.</p>'
+    + '<div class="tlinks"><a class="sbtn" href="https://www.data.jma.go.jp/kaiyou/db/tide/suisan/suisan.php?stn=Q8&ys=2027&ms=01&ds=14&ye=2027&me=01&de=14&S_HILO=on&LV=DL#hilo" target="_blank" rel="noopener">📈 Tábua oficial (JMA, Hiroshima)</a><a class="sbtn" href="https://www.miyajima.or.jp/" target="_blank" rel="noopener">⛩️ Associação de turismo de Miyajima</a></div>'
+    + '<p class="tn">A tábua da JMA mostra as alturas em cm (潮位), e a de 2027 sai perto do fim deste ano. O site de turismo tem a tabela 潮汐表 com os horários para ver o torii.</p></section>';
+}
+async function loadTide(){
+  const box = document.getElementById("tideLive"); if (!box) return;
+  const diff = Math.round((new Date(TIDE_DAY+"T12:00:00+09:00") - Date.now())/86400000);
+  let d = lsGet("jp-tide");
+  if ((!d || Date.now() - d.at > 6*3600*1000) && diff >= -1 && diff <= 7){
+    try {
+      const r = await fetch("https://marine-api.open-meteo.com/v1/marine?latitude="+TIDE_LL[0]+"&longitude="+TIDE_LL[1]+"&hourly=sea_level_height_msl&timezone=Asia%2FTokyo&start_date="+TIDE_DAY+"&end_date="+TIDE_DAY+"&cell_selection=sea");
+      if (r.ok){ const j = await r.json(); const h = j.hourly && j.hourly.sea_level_height_msl; if (h && h.filter(x => x != null).length >= 20){ d = {at: Date.now(), h}; lsSet("jp-tide", d); } }
+    } catch(e) {}
+  }
+  if (!d || !d.h || cur.day !== 9) return;
+  const h = d.h.map(x => x == null ? null : x), vals = h.filter(x => x != null), mn = Math.min(...vals), mx = Math.max(...vals);
+  const W = 340, H = 120, X = i => 14 + i*(W-28)/23, Y = v => 24 + (mx - v)/((mx - mn) || 1)*(H-50);
+  let path = ''; h.forEach((v,i) => { if (v != null) path += (path ? 'L' : 'M')+X(i).toFixed(1)+','+Y(v).toFixed(1); });
+  const ext = [];
+  for (let i = 1; i < 23; i++){ const a = h[i-1], b = h[i], c = h[i+1]; if (a == null || b == null || c == null) continue; if (b >= a && b > c) ext.push([i,b,'alta']); if (b <= a && b < c) ext.push([i,b,'baixa']); }
+  const fmt = i => String(i).padStart(2,"0")+'h';
+  let g = '<path d="'+path+' L'+X(23)+','+(H-24)+' L'+X(0)+','+(H-24)+' Z" fill="color-mix(in srgb,#2E6FD8 18%,transparent)" stroke="none"/><path d="'+path+'" fill="none" stroke="#2E6FD8" stroke-width="2.5"/>';
+  ext.forEach(([i,v,k]) => { g += '<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4" fill="'+(k==='alta'?'#2E6FD8':'#E08A00')+'"/><text x="'+X(i)+'" y="'+(Y(v)-9)+'" text-anchor="middle">'+fmt(i)+'</text>'; });
+  [0,6,12,18,23].forEach(i => { g += '<text class="ax" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+fmt(i)+'</text>'; });
+  box.innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Curva de maré em Miyajima no dia 14">'+g+'</svg>'
+    + '<p class="tm">'+(ext.length ? ext.map(([i,v,k]) => '<b>'+(k==='alta'?'🔵 Alta':'🟠 Baixa')+'</b> por volta das '+fmt(i)).join(' · ') : 'Sem picos claros no dia.')+'</p>'
+    + '<p class="tn">Previsão de modelo (Open-Meteo), atualizada '+new Date(d.at).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+'. Mostra a forma da maré e os horários aproximados; para a altura exata em cm, usem a tábua oficial.</p>';
 }
 async function loadWeather(n){
   const el = document.getElementById("wx"); if (!el) return;
