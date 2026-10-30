@@ -1193,7 +1193,7 @@ function renderShops(){
 function renderTrains(){
   let h = '<div class="gd"><section class="day-head"><div class="big" aria-hidden="true"><small>TRENS</small><span>🚆</span></div><div><p class="of">Como se locomover</p><h2>Trens e transporte</h2></div></section>';
   h += '<h2 class="section-title">Trens desta viagem</h2><div class="legs">' + EXTRA.legs.map(l => '<button class="legc" type="button" data-day="'+l[0]+'"><span class="lh"><b>'+esc(l[1])+'</b><span>Dia '+l[0]+' · '+fmtDate(l[0]).replace(" de janeiro","/jan")+'</span></span><span class="lt">'+esc(l[2])+' · '+esc(l[3])+'</span><span class="ln2">'+esc(l[4])+'</span></button>').join('') + '</div>';
-  h += '<h2 class="section-title">🎧 Para ouvir no trem</h2><p class="lead">Buscas prontas no Spotify e no YouTube Music. Baixem as playlists no Wi-Fi do hotel para ouvir sem internet.</p><div class="pls">' + EXTRA.playlists.map(p => '<div class="pl"><span class="pe" aria-hidden="true">'+p[0]+'</span><span class="pt"><b>'+esc(p[1])+'</b><small>'+esc(p[2])+'</small></span><a class="sbtn" href="https://open.spotify.com/search/'+encodeURIComponent(p[3])+'/playlists" target="_blank" rel="noopener">Spotify</a><a class="sbtn" href="https://music.youtube.com/search?q='+encodeURIComponent(p[3])+'" target="_blank" rel="noopener">YT Music</a></div>').join('') + '</div>';
+  h += '<h2 class="section-title">🎧 Para ouvir no trem</h2><p class="lead">Buscas prontas no Spotify e no YouTube Music. Baixem as playlists no Wi-Fi do hotel para ouvir sem internet.</p><div class="pls">' + EXTRA.playlists.map(p => '<div class="pl"><span class="pe" aria-hidden="true">'+p[0]+'</span><span class="pt"><b>'+esc(p[1])+'</b><small>'+esc(p[2])+'</small></span><a class="sbtn" data-spq="'+esc(p[3])+'" href="spotify:search:'+encodeURIComponent(p[3])+'">Spotify</a><a class="sbtn" href="https://music.youtube.com/search?q='+encodeURIComponent(p[3])+'" target="_blank" rel="noopener">YT Music</a></div>').join('') + '</div>';
   h += '<h2 class="section-title">Guia rápido</h2>';
   EXTRA.trains.forEach(([t, ps], i) => { h += panel(['💳','🪧','🚄','🆘','⏰','📱'][i]||'🚆', esc(t), ps.map(p => '<p>'+esc(p)+'</p>').join('')); });
   h += '</div>';
@@ -2071,6 +2071,17 @@ achCheck();
 if (location.hash.startsWith("#sync=")){ const code = location.hash.slice(6); history.replaceState(null, "", "#"); setTimeout(() => importProgress(code), 300); }
 fromHash(); if (!location.hash || location.hash === "#"){ const tn = tripDayToday(); if (tn){ cur.day = tn; history.replaceState(null, "", "#dia-"+tn); } } render();
 { const tn = tripDayToday(); if (tn) showTodayPop(tn); }
+
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('a[data-spq]'); if (!a) return;
+  e.preventDefault();
+  const q = a.dataset.spq; let left = false;
+  const onHide = () => { left = true; };
+  document.addEventListener('visibilitychange', onHide, { once: true });
+  window.addEventListener('pagehide', onHide, { once: true });
+  location.href = 'spotify:search:' + encodeURIComponent(q);
+  setTimeout(() => { if (!left && !document.hidden) window.open('https://open.spotify.com/search/' + encodeURIComponent(q), '_blank', 'noopener'); }, 1500);
+});
 </script>
 </body>
 </html>
