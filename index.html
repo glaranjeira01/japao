@@ -498,8 +498,23 @@ details.pn .pbody p + p{margin-top:10px}
 .more>summary::before{content:"＋ "}
 .more[open]>summary::before{content:"－ "}
 .more[open]{padding-bottom:12px}
-.txapps{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
-.txapps a,.txapps button{border:1px solid #D0D5DB;background:#F3F5F7;color:#111418;border-radius:8px;padding:10px 12px;font:inherit;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer}
+.txapps{display:flex;flex-direction:column;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid #E3E6EA;width:100%}
+.txapps[hidden]{display:none}
+.txl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#7A838E;text-align:left}
+.txa{display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;border-radius:12px;padding:11px 14px;font:inherit;text-align:left;text-decoration:none;cursor:pointer;transition:transform .1s}
+.txa:active{transform:scale(.98)}
+.txa .ti{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}
+.txa .tt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.txa b{font-size:15px;line-height:1.2}
+.txa small{font-size:12px;line-height:1.3}
+.txa .go{font-size:18px;font-weight:700}
+.txu{background:#111418;color:#FFFFFF;border:0}
+.txu .ti{background:#2A3038}
+.txu small{color:#AEB6BF}
+.txc{background:#FFFFFF;color:#111418;border:1.5px solid #D0D5DB}
+.txc .ti{background:#F0F2F5}
+.txc small{color:#6A737D}
+.txc.ok{border-color:#0B7A4B;background:#EAF6F0}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -698,7 +713,7 @@ footer p{margin:0;flex:1 1 100%}
 
 <div class="wrap"><footer><p>Horários são sugestões; confirmem o funcionamento das atrações perto da data. As marcações de “visto” ficam salvas só neste aparelho. Fotos: Wikimedia Commons, com o crédito de cada autor nas curiosidades.</p><button class="fbtn" id="themeBtn" type="button">Claro / escuro</button></footer></div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada"><button class="lb-x" id="lbX" type="button" aria-label="Fechar foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure></div>
-<div class="tx" id="tx" hidden role="dialog" aria-modal="true" aria-label="Endereço em japonês para o taxista"><div class="card" lang="ja"><span class="nm" id="txN"></span><span class="ad" id="txA"></span><span class="say">ここまでお願いします。</span><span class="pt" lang="pt-BR">“Por favor, me leve até aqui.” Toque fora para fechar.</span><span class="txapps" lang="pt-BR"><a id="txUber" href="#" target="_blank" rel="noopener" data-txapp="1">Abrir no Uber</a><button type="button" data-txcopy="1">Copiar endereço (GO, DiDi)</button></span></div></div>
+<div class="tx" id="tx" hidden role="dialog" aria-modal="true" aria-label="Endereço em japonês para o taxista"><div class="card" lang="ja"><span class="nm" id="txN"></span><span class="ad" id="txA"></span><span class="say">ここまでお願いします。</span><span class="pt" lang="pt-BR">“Por favor, me leve até aqui.” Toque fora para fechar.</span><span class="txapps" lang="pt-BR"><span class="txl">Ou peçam pelo celular</span><a id="txUber" class="txa txu" href="#" target="_blank" rel="noopener" data-txapp="1"><span class="ti" aria-hidden="true">🚗</span><span class="tt"><b>Abrir no Uber</b><small>Destino já preenchido</small></span><span class="go" aria-hidden="true">↗</span></a><button type="button" class="txa txc" data-txcopy="1"><span class="ti" aria-hidden="true">📋</span><span class="tt"><b>Copiar endereço</b><small>Para colar no GO ou no DiDi</small></span></button></span></div></div>
 <button class="dtab" id="dtab" type="button" aria-label="Abrir os dias da viagem" aria-controls="drawer" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><b id="dtabN">20</b><span>DIAS</span></button>
 <div class="dscrim" id="dscrim"></div>
 <aside class="drawer" id="drawer" aria-label="Dias da viagem" aria-hidden="true"><div class="dh"><div><h2>Roteiro · 20 dias</h2><p id="drawerSub">6 a 25 de janeiro</p></div><button class="dx" id="dx" type="button" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="dl" id="drawerList"></div></aside>
@@ -2026,7 +2041,7 @@ document.addEventListener("click", e => {
   const yf = e.target.closest("[data-yfull]"); if (yf){ document.querySelector(".txapps").hidden = true; const y = YAMATO[+yf.dataset.yfull]; document.getElementById("txN").textContent = "宅急便（ヤマト運輸）"; document.getElementById("txA").textContent = "この荷物を宅急便で次のホテルへ送りたいです。"+y.jp+"に届くようにお願いします。"; document.getElementById("tx").hidden = false; document.body.style.overflow = "hidden"; return; }
   if (e.target.closest("#offBtn")){ downloadAll(); return; }
   if (!document.getElementById("tx").hidden && e.target.closest("[data-txapp]")) return;
-  if (!document.getElementById("tx").hidden && e.target.closest("[data-txcopy]")){ const t = document.getElementById("txN").textContent+" "+document.getElementById("txA").textContent; try { navigator.clipboard.writeText(t); } catch(err) {} toast("📋 Endereço copiado"); return; }
+  if (!document.getElementById("tx").hidden && e.target.closest("[data-txcopy]")){ const t = document.getElementById("txN").textContent+" "+document.getElementById("txA").textContent; try { navigator.clipboard.writeText(t); } catch(err) {} const cb = e.target.closest("[data-txcopy]"); cb.classList.add("ok"); cb.querySelector("b").textContent = "Endereço copiado ✓"; setTimeout(() => { cb.classList.remove("ok"); cb.querySelector("b").textContent = "Copiar endereço"; }, 2000); return; }
   if (!document.getElementById("tx").hidden){ document.getElementById("tx").hidden = true; document.body.style.overflow = ""; return; }
   const jb = e.target.closest("[data-ja]"); if (jb){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+jb.dataset.ja]; { const u = document.getElementById("txUber"); u.href = "https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[nickname]="+encodeURIComponent(st.name)+"&dropoff[formatted_address]="+encodeURIComponent(st.ja[1]); u.parentElement.hidden = false; } document.getElementById("txN").textContent = st.ja[0]; document.getElementById("txA").textContent = st.ja[1]; document.getElementById("tx").hidden = false; document.body.style.overflow = "hidden"; return; }
   if (!document.getElementById("lb").hidden){ if (!e.target.closest("#lbImg")) closeLB(); return; }
