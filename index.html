@@ -374,11 +374,13 @@ details.pn .pbody p + p{margin-top:10px}
 .tmr .f{margin:0;font-size:14px;color:var(--ink-2)}
 .tmr ul{margin:2px 0 4px;padding-left:18px;font-size:14px;line-height:1.5;color:var(--ink-2);display:flex;flex-direction:column;gap:3px}
 .tmr .btn{align-self:flex-start}
-.actions{flex-wrap:wrap;margin-top:10px;gap:5px}
-.actions .hrs{width:29px;height:30px;font-size:15px;line-height:1}
+.actions{flex-wrap:wrap;margin-top:10px;gap:4px}
+.actions .hrs{width:27px;height:30px;font-size:15px;line-height:1}
 .actions .check{width:34px;height:30px;padding:0;justify-content:center}
 .actions .check svg{width:16px;height:16px}
-@media (max-width:385px){.actions{gap:3px}.actions .hrs{width:26px;font-size:14px}.actions .check{width:30px}.actions .maps{padding:4px 6px}.time{width:54px}}
+.actions .maps{font-size:0;width:40px;height:30px;padding:0;justify-content:center;gap:0}
+.actions .maps svg{width:17px;height:17px}
+@media (max-width:385px){.actions{gap:3px}.actions .hrs{width:25px;font-size:13.5px}.actions .check{width:28px}.actions .maps{width:34px}.time{width:52px}}
 .actions .check[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .reader .curl{margin:8px 0 12px;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.6;color:var(--ink-2)}
 .reader .credit{font-size:12px;color:var(--muted);margin:0 0 12px}
@@ -490,6 +492,14 @@ details.pn .pbody p + p{margin-top:10px}
 .pl .pt b{font-size:14.5px}
 .pl .pt small{font-size:12px;color:var(--muted)}
 .pl a{text-decoration:none;padding:6px 8px;font-size:12px}
+.more{margin-top:16px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:0 12px}
+.more>summary{cursor:pointer;list-style:none;padding:14px 2px;font-weight:700;font-size:14.5px;color:var(--accent)}
+.more>summary::-webkit-details-marker{display:none}
+.more>summary::before{content:"＋ "}
+.more[open]>summary::before{content:"－ "}
+.more[open]{padding-bottom:12px}
+.txapps{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.txapps a,.txapps button{border:1px solid #D0D5DB;background:#F3F5F7;color:#111418;border-radius:8px;padding:10px 12px;font:inherit;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer}
 .clocks{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .clk{background:#111418;color:#FFFFFF;border-radius:12px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:2px;border:1px solid #2B3138}
 .clk .w{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;color:#9AA3AD;text-transform:uppercase}
@@ -688,7 +698,7 @@ footer p{margin:0;flex:1 1 100%}
 
 <div class="wrap"><footer><p>Horários são sugestões; confirmem o funcionamento das atrações perto da data. As marcações de “visto” ficam salvas só neste aparelho. Fotos: Wikimedia Commons, com o crédito de cada autor nas curiosidades.</p><button class="fbtn" id="themeBtn" type="button">Claro / escuro</button></footer></div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada"><button class="lb-x" id="lbX" type="button" aria-label="Fechar foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure></div>
-<div class="tx" id="tx" hidden role="dialog" aria-modal="true" aria-label="Endereço em japonês para o taxista"><div class="card" lang="ja"><span class="nm" id="txN"></span><span class="ad" id="txA"></span><span class="say">ここまでお願いします。</span><span class="pt" lang="pt-BR">“Por favor, me leve até aqui.” Toque fora para fechar.</span></div></div>
+<div class="tx" id="tx" hidden role="dialog" aria-modal="true" aria-label="Endereço em japonês para o taxista"><div class="card" lang="ja"><span class="nm" id="txN"></span><span class="ad" id="txA"></span><span class="say">ここまでお願いします。</span><span class="pt" lang="pt-BR">“Por favor, me leve até aqui.” Toque fora para fechar.</span><span class="txapps" lang="pt-BR"><a id="txUber" href="#" target="_blank" rel="noopener" data-txapp="1">Abrir no Uber</a><button type="button" data-txcopy="1">Copiar endereço (GO, DiDi)</button></span></div></div>
 <button class="dtab" id="dtab" type="button" aria-label="Abrir os dias da viagem" aria-controls="drawer" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><b id="dtabN">20</b><span>DIAS</span></button>
 <div class="dscrim" id="dscrim"></div>
 <aside class="drawer" id="drawer" aria-label="Dias da viagem" aria-hidden="true"><div class="dh"><div><h2>Roteiro · 20 dias</h2><p id="drawerSub">6 a 25 de janeiro</p></div><button class="dx" id="dx" type="button" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="dl" id="drawerList"></div></aside>
@@ -1333,7 +1343,8 @@ function closeDrawer(){
 }
 
 function renderOverview(){
-  let h = renderCountdown() + renderTomorrow() + renderClocks() + renderCalendar() + renderTix() + renderAch() + renderFavs() + renderMiniYen() + renderMap() + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
+  const tn = tripDayToday();
+  let h = renderCountdown() + (tn ? '<div class="dep" id="dep" hidden></div><div id="tixDay"></div>' : '') + renderTomorrow() + (tn ? '<details class="more"><summary>Ver mais: relógios, calendário, mapa, ingressos, conquistas e todos os dias</summary>' : '') + renderClocks() + renderCalendar() + renderTix() + renderAch() + renderFavs() + renderMiniYen() + renderMap() + '<section class="offline" aria-labelledby="offT"><div class="h"><div class="ic">'+ICON_DL+'</div><div><h2 id="offT">Usar sem internet</h2><p>Salva o roteiro, as curiosidades e as fotos neste celular. Façam isso no Wi-Fi, antes da viagem, em cada aparelho.</p></div></div>'
     + '<div class="offrow"><button class="sbtn" type="button" data-sync="make">🔄 Passar para outro celular</button></div>'
     + '<div><button class="btn" id="offBtn" type="button">'+ICON_DL+'Baixar para usar offline</button></div>'
     + '<span class="bar" id="offBar" hidden><i></i></span><div class="status" id="offStatus"></div></section>';
@@ -1347,8 +1358,10 @@ function renderOverview(){
     }
     h += '</div>';
   });
+  if (tn) h += '</details>';
   h += emergHtml();
   document.getElementById("app").innerHTML = h;
+  if (tn){ paintDep(); tixLoad().then(() => { const el = document.getElementById("tixDay"); const c = tixList.filter(t => t.day === tn).length; if (el && cur.day === 0 && c) el.innerHTML = '<button class="tixday" type="button" data-tixday="'+tn+'">🎫 Ingressos de hoje ('+c+')</button>'; }); }
   offlineStatus();
   tickClocks();
 }
@@ -1397,6 +1410,7 @@ function renderDay(){
       + (cs.length ? '<button class="hrs" type="button" data-cur="'+i+'" aria-label="'+cs.length+' curiosidades sobre '+esc(s.name)+'" title="Curiosidades">❓</button>' : '')
       + (s.ja ? '<button class="hrs" type="button" data-ja="'+i+'" aria-label="Endereço em japonês para o taxista" title="Para o taxista">🚕</button>' : '')
       + (EXTRA.hours[s.name] ? '<button class="hrs" type="button" data-hours="'+i+'" aria-label="Horário de '+esc(s.name)+'" title="Horário">🕘</button>' : '')
+      + '<button class="hrs" type="button" data-copy="'+esc(s.name)+'" aria-label="Copiar o nome '+esc(s.name)+'" title="Copiar nome">📋</button>'
       + '<button class="check" type="button" data-i="'+i+'" aria-pressed="'+on+'" aria-label="Marcar como visto" title="Marcar como visto">'+ICON_CHECK+'</button>'
       + '</div>';
     const nx = p.stops[i+1];
@@ -1514,7 +1528,7 @@ function updateLed(){
 }
 function paintDep(){
   const el = document.getElementById("dep"); if (!el) return;
-  const n = cur.day; if (n < 1 || tripDayToday() !== n){ el.hidden = true; return; }
+  const n = cur.day === 0 ? tripDayToday() : cur.day; if (n < 1 || tripDayToday() !== n){ el.hidden = true; return; }
   const now = jstNow(), nm = now.getHours()*60 + now.getMinutes();
   const nx = EXTRA.departs.filter(d => d[0] === n).map(d => [d, (+d[1].slice(0,2))*60 + (+d[1].slice(3))]).find(([d, m]) => m >= nm - 2);
   if (!nx){ el.hidden = true; return; }
@@ -1525,6 +1539,7 @@ function paintDep(){
 }
 function markNow(){
   paintDep();
+  if (cur.day < 1) return;
   document.querySelectorAll(".nowdot").forEach(e => e.remove());
   if (cur.day < 1 || tripDayToday() !== cur.day) return;
   const st = plans(DATA[cur.day-1])[cur.v].plan.stops, now = jstNow(), nm = now.getHours()*60 + now.getMinutes();
@@ -1570,12 +1585,22 @@ function showTodayPop(n){
   const p = plans(DATA[n-1])[0].plan;
   openPop('<div class="tp"><p class="lbl" style="margin:0;font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">'+(n===1?'A viagem começou! 🎌':'Bom dia no Japão')+'</p><h3>Hoje é o dia '+n+' de 20</h3><p>'+fmtDate(n)+' · '+esc(p.title)+'</p><button class="btn" type="button" data-goday="'+n+'">Abrir a programação de hoje</button></div>');
 }
+const WAKE_OVR = {12: ["06h30", "o expresso Hida sai cedo de Nagoya"]};
+function wakeTime(n){
+  if (WAKE_OVR[n]) return WAKE_OVR[n][0]+" ("+WAKE_OVR[n][1]+")";
+  const st = DATA[n-1].main.stops.find(s => !/^Chegada/.test(s.name)); let m = st ? minsOf(st.time) : null, why = st ? st.name : "";
+  EXTRA.departs.filter(d => d[0] === n).forEach(d => { const dm = (+d[1].slice(0,2))*60 + (+d[1].slice(3)); if (m == null || dm < m){ m = dm; why = d[3]; } });
+  if (m == null) return "";
+  const w = Math.floor((m - 75)/15)*15;
+  return String(Math.floor(w/60)).padStart(2,"0")+"h"+String(w%60).padStart(2,"0")+" (1h15 antes de: "+why+" às "+String(Math.floor(m/60)).padStart(2,"0")+"h"+String(m%60).padStart(2,"0")+")";
+}
 function renderTomorrow(){
   const now = jstNow(); if (now.getHours() < 16) return "";
   const nt = Math.round((jstToday() - START)/86400000) + 2;
   if (nt < 1 || nt > 20) return "";
   const p = DATA[nt-1].main, f = p.stops[0], y = YAMATO[nt];
   const tips = (EXTRA.tomorrow[nt] || []).slice();
+  const wk = wakeTime(nt); if (wk) tips.unshift("⏰ Despertador sugerido: "+wk);
   if (y && !y.tip) tips.unshift("Malas grandes: entregar na recepção no check-out, para a Yamato levar a "+y.to+" (entrega em "+y.date+").");
   return '<section class="tmr" aria-labelledby="tmrT"><p class="k">Amanhã · dia '+nt+' · '+fmtDate(nt)+'</p><h2 id="tmrT">'+esc(p.title)+'</h2>'
     + (f ? '<p class="f">Primeira parada: <b>'+esc(f.time)+'</b> · '+esc(f.name)+'</p>' : '')
@@ -1967,6 +1992,7 @@ document.addEventListener("click", e => {
   if (calcClick(e)) return;
   if (await_tix(e)) return;
   const sy = e.target.closest("[data-sync]"); if (sy){ const a = sy.dataset.sync; if (a === "make") shareProgress(); else if (a === "share"){ navigator.share({title: "Roteiro Japão", url: window._syncUrl}).catch(() => {}); } else if (a === "copy"){ const i = document.querySelector(".synci"); i.select(); try { navigator.clipboard.writeText(window._syncUrl); } catch(err) { document.execCommand("copy"); } sy.textContent = "Copiado ✓"; } return; }
+  const cpy = e.target.closest("[data-copy]"); if (cpy){ const t = cpy.dataset.copy; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).catch(() => { const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch(err) {} ta.remove(); }); toast("📋 Copiado: "+t); return; }
   const fv = e.target.closest("[data-fav]"); if (fv){ e.preventDefault(); e.stopPropagation(); const k = fv.dataset.fav; if (favSt[k]) delete favSt[k]; else favSt[k] = 1; lsSet("jp-fav", favSt);
     document.querySelectorAll('[data-fav]').forEach(x => { if (x.dataset.fav === k){ const on = !!favSt[k]; x.setAttribute("aria-pressed", on); x.textContent = on ? '★' : '☆'; x.setAttribute("aria-label", on ? 'Tirar dos favoritos' : 'Pôr nos favoritos'); } });
     if (cur.day === 0){ const f = document.querySelector(".favs"); if (f) f.outerHTML = renderFavs(); } return; }
@@ -1997,10 +2023,12 @@ document.addEventListener("click", e => {
   const hb = e.target.closest("[data-hours]"); if (hb){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+hb.dataset.hours]; openPop('<h3>🕘 '+esc(st.name)+'</h3><p>'+esc(EXTRA.hours[st.name])+'</p><small>Horários de inverno; podem mudar. Confiram no site oficial antes de ir. Toque fora para fechar.</small>'); return; }
   const et = e.target.closest("[data-etiq]"); if (et){ const x = GUIDE.etiq[+et.dataset.etiq]; openPop('<h3>'+esc(x[0])+'</h3><p>'+esc(x[1])+'</p><small>Toque fora para fechar.</small>'); return; }
   const sb = e.target.closest("[data-say]"); if (sb){ say(sb.dataset.say); return; }
-  const yf = e.target.closest("[data-yfull]"); if (yf){ const y = YAMATO[+yf.dataset.yfull]; document.getElementById("txN").textContent = "宅急便（ヤマト運輸）"; document.getElementById("txA").textContent = "この荷物を宅急便で次のホテルへ送りたいです。"+y.jp+"に届くようにお願いします。"; document.getElementById("tx").hidden = false; document.body.style.overflow = "hidden"; return; }
+  const yf = e.target.closest("[data-yfull]"); if (yf){ document.querySelector(".txapps").hidden = true; const y = YAMATO[+yf.dataset.yfull]; document.getElementById("txN").textContent = "宅急便（ヤマト運輸）"; document.getElementById("txA").textContent = "この荷物を宅急便で次のホテルへ送りたいです。"+y.jp+"に届くようにお願いします。"; document.getElementById("tx").hidden = false; document.body.style.overflow = "hidden"; return; }
   if (e.target.closest("#offBtn")){ downloadAll(); return; }
+  if (!document.getElementById("tx").hidden && e.target.closest("[data-txapp]")) return;
+  if (!document.getElementById("tx").hidden && e.target.closest("[data-txcopy]")){ const t = document.getElementById("txN").textContent+" "+document.getElementById("txA").textContent; try { navigator.clipboard.writeText(t); } catch(err) {} toast("📋 Endereço copiado"); return; }
   if (!document.getElementById("tx").hidden){ document.getElementById("tx").hidden = true; document.body.style.overflow = ""; return; }
-  const jb = e.target.closest("[data-ja]"); if (jb){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+jb.dataset.ja]; document.getElementById("txN").textContent = st.ja[0]; document.getElementById("txA").textContent = st.ja[1]; document.getElementById("tx").hidden = false; document.body.style.overflow = "hidden"; return; }
+  const jb = e.target.closest("[data-ja]"); if (jb){ const st = plans(DATA[cur.day-1])[cur.v].plan.stops[+jb.dataset.ja]; { const u = document.getElementById("txUber"); u.href = "https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[nickname]="+encodeURIComponent(st.name)+"&dropoff[formatted_address]="+encodeURIComponent(st.ja[1]); u.parentElement.hidden = false; } document.getElementById("txN").textContent = st.ja[0]; document.getElementById("txA").textContent = st.ja[1]; document.getElementById("tx").hidden = false; document.body.style.overflow = "hidden"; return; }
   if (!document.getElementById("lb").hidden){ if (!e.target.closest("#lbImg")) closeLB(); return; }
   const th = e.target.closest(".thumb.has"); if (th){ openLB(th.dataset.photo, th); return; }
   const chk = e.target.closest(".check"); if (chk){ toggleStop(+chk.dataset.i); return; }
