@@ -193,6 +193,13 @@ a{color:inherit}
 .bagdays span small{font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
 .bagdays span.on{background:var(--amber);border-color:var(--amber);color:#111418}
 .bagdays span.on small{color:#111418}
+.bagdays span.wash{background:#2f7fd0;border-color:#2f7fd0;color:#fff}
+.bagdays span.wash small{color:#fff}
+.bagdays span.maybe{border:2px dashed #2f7fd0}
+.wlist{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.wlist li{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.45}
+.wlist li b{display:block;font-size:15px}
+.wlist li em{font-style:normal;font-size:12px;font-weight:700;color:#2f7fd0}
 .tips li{margin:4px 0;font-size:14px;color:var(--ink-2)}
 .lead{margin:0 0 10px;font-size:14px;color:var(--ink-2)}
 .chipgrid button small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
@@ -1790,6 +1797,19 @@ function renderMalas(){
   h += '<h2 class="section-title">Dias com as malas grandes</h2><div class="bagdays">';
   for (let dm=5; dm<=25; dm++){ const on = dm===5 || BAG_DAYS.has(dm); h += '<span class="'+(on?'on':'')+'">'+dm+'<small>'+(dm===5?'chega':DOW[new Date(2027,0,dm).getDay()])+'</small></span>'; }
   h += '</div><p style="margin:8px 0 0;font-size:13px;color:var(--muted)">Em amarelo, os dias com as malas grandes. Nos outros, só com a mochila.</p>';
+  h += '<h2 class="section-title">🫧 Máquina de lavar e secar</h2><div class="bagdays">';
+  const WASH = {7:1,8:1,9:1,10:1,11:1,12:1,13:1,14:1,15:1,16:1,17:1,18:1,20:1,21:1,22:1,23:1,24:1,25:1}, WMAY = {5:1,6:1,19:1};
+  for (let dm=5; dm<=25; dm++){ h += '<span class="'+(WASH[dm]?'wash':(WMAY[dm]?'maybe':''))+'">'+dm+'<small>'+DOW[new Date(2027,0,dm).getDay()]+'</small></span>'; }
+  h += '</div><p style="margin:8px 0 0;font-size:13px;color:var(--muted)">Em azul, as noites com lavanderia no hotel. Tracejado: a confirmar no check-in.</p><ul class="wlist">'
+    + '<li><b>Quioto · 8 a 11/jan</b><em>MELHOR NOITE: 9/JAN</em> Hotel com lavanderia para hóspedes. No dia 9 vocês voltam ao hotel no fim da manhã: dá para deixar uma máquina rodando na pausa.</li>'
+    + '<li><b>Hiroshima · 12 a 14/jan</b><em>MELHOR NOITE: 13/JAN</em> Lavanderia no 2º andar, com máquinas automáticas de lavar e secar; o sabão já vem incluído. Boa para a roupa da primeira semana, já que aqui vocês estão só com a mochila.</li>'
+    + '<li><b>Nagoya · 15 e 16/jan</b> Lava e seca no 2º subsolo, ¥500 por uso.</li>'
+    + '<li><b>Takayama · 17 e 18/jan</b> Lavanderia self-service. Útil antes de Shirakawa-gō e Kanazawa, ainda só com a mochila.</li>'
+    + '<li><b>Tóquio · 20 a 25/jan</b><em>MELHOR NOITE: 22 OU 23/JAN</em> Hotel com lavanderia (moedas). Uma lavada no meio da semana deixa a mala de volta mais leve de roupa suja.</li>'
+    + '<li><b>A confirmar</b> Tóquio (5 e 6/jan), Odawara (7/jan) e Kanazawa (19/jan): os sites citam lavanderia, mas sem detalhes; são noites curtas, então não contem com elas.</li></ul>'
+    + '<ul class="tips"><li>As máquinas de lavar e secar juntas levam de 1h30 a 2h; separadas, cerca de 35 min lavando e 30 a 40 min secando. Comecem cedo à noite.</li>'
+    + '<li>Levem moedas de ¥100 (muitas lavanderias não aceitam notas) e um saco dobrável para levar a roupa ao quarto.</li>'
+    + '<li>洗剤は入っていますか？ (senzai wa haitte imasu ka?): "O sabão já está incluído?"</li></ul>';
   h += '<h2 class="section-title">Envios</h2>';
   h += '<div class="ship"><div class="sh"><b>Opcional · noite de 6/jan</b><span>Tóquio → Quioto</span></div><p>Deixar as malas na recepção na noite do dia 6, com entrega marcada para 8/jan, dá um dia de folga se a neve atrasar o caminhão. No dia 7 vocês saem para Hakone só com a mochila.</p></div>';
   [[2,"Qui, 7/jan","Tóquio → Quioto","8/jan","no check-out, antes de ir para Hakone"],[7,"Ter, 12/jan","Quioto → Nagoya","15/jan","no check-out, antes do Fushimi Inari"],[12,"Dom, 17/jan","Nagoya → Tóquio","20/jan","no check-out, antes do trem para Takayama"]].forEach(([n,dt,route,del,when]) => {
