@@ -1,5 +1,5 @@
-/* v3 · Service worker do roteiro: deixa o site, as fontes e as fotos disponíveis sem internet. */
-const SHELL = "jp-shell-v1";
+/* v4 · Service worker do roteiro: deixa o site, as fontes e as fotos disponíveis sem internet. */
+const SHELL = "jp-shell-v2";
 const MEDIA = "jp-media-v1";
 const SHELL_FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-180.png"];
 
