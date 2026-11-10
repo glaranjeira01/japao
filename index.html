@@ -487,6 +487,14 @@ details.pn .pbody p + p{margin-top:10px}
 .tixh span{flex:1;font-size:13px;color:#5A6370}
 .tixh button{width:40px;height:40px;border-radius:50%;border:1px solid #D0D5DB;background:#fff;color:#111418;font-size:18px;cursor:pointer}
 .tixo img{flex:1;min-height:0;width:100%;object-fit:contain;margin:12px 0}
+.mapl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:8px 0 10px}
+.mapl:empty{display:none}
+.mapi{display:flex;flex-direction:column;gap:4px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);padding:6px;font:inherit;cursor:pointer;text-align:left}
+.mapi img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px}
+.mapi b{font-size:13px;line-height:1.2}
+.tixo .mapsc{flex:1;min-height:0;width:100%;overflow:auto;margin:12px 0;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom}
+.tixo .mapsc img{display:block;width:100%;height:100%;object-fit:contain;margin:0;cursor:zoom-in}
+.tixo.zoom .mapsc img{width:260%;height:auto;max-width:none;object-fit:initial;cursor:zoom-out}
 .tixtip{margin:0 0 10px;font-size:12.5px;color:#5A6370;text-align:center}
 .tixb{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .tixb button{border:1px solid #D0D5DB;background:#F3F5F7;color:#111418;border-radius:8px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}
@@ -789,6 +797,16 @@ let favSt = lsGet("jp-fav") || {};
 function favBtn(key){ const on = !!favSt[key]; return '<button class="fav" type="button" data-fav="'+esc(key)+'" aria-pressed="'+on+'" aria-label="'+(on?'Tirar dos favoritos':'Pôr nos favoritos')+'">'+(on?'★':'☆')+'</button>'; }
 function stopDayOf(name){ for (let n = 1; n <= 20; n++){ const ps = plans(DATA[n-1]); for (let v = 0; v < ps.length; v++){ const i = ps[v].plan.stops.findIndex(x => x.name === name); if (i >= 0) return [n, v, i]; } } return null; }
 function allPhrases(){ const out = []; GUIDE.phrases.forEach(([g, l]) => l.forEach(x => out.push(x))); Object.values(EXTRA.dphr).forEach(l => l.forEach(x => out.push(x))); return out; }
+function mapPanel(n){
+  const tip = n === 11 ? 'Guardem aqui os mapas oficiais de cada área do Ghibli Park (Colina da Juventude, Grande Armazém, Vale das Bruxas, Floresta Dondoko e Vila Mononoke). ' : '';
+  return panel('🗺️', 'Mapas do dia', '<p class="fe">'+tip+'Ficam só neste celular, como os ingressos, e funcionam sem internet.</p><div id="mapL" class="mapl"></div><input type="file" id="mapF" accept="image/*" hidden><button class="btn" type="button" data-tix="addmap">＋ Adicionar mapa</button>');
+}
+function paintMaps(n){
+  const el = document.getElementById("mapL"); if (!el) return;
+  const ms = tixList.filter(t => t.kind === 'map' && t.day === n).sort((a,b) => a.at - b.at);
+  el.innerHTML = ms.length ? ms.map(t => { const u = URL.createObjectURL(t.blob); return '<button class="mapi" type="button" data-tixv="'+t.id+'"><img src="'+u+'" alt=""><b>'+esc(t.label)+'</b></button>'; }).join('') : '';
+  const det = el.closest('details'); if (det && ms.length && !det.dataset.o){ det.dataset.o = 1; det.open = true; }
+}
 function photoPanel(n){
   const ps = EXTRA.photo[n]; if (!ps) return '';
   const [la,lo] = WX_LOC[WX_DAY[n-1]], st = sunTimes(la, lo, dateOf(n))[1], m = minsOf(st.replace(':','h'));
@@ -883,38 +901,41 @@ function renderTix(){
 }
 async function paintTix(){
   const el = document.getElementById("tixL"); if (!el) return; await tixLoad();
-  el.innerHTML = tixList.length ? tixList.sort((a,b) => (a.day||99)-(b.day||99)).map(t => '<button class="tixi" type="button" data-tixv="'+t.id+'"><span>🎫</span><b>'+esc(t.label)+'</b><small>'+(t.day?'Dia '+t.day+' · '+fmtDate(t.day):'Sem dia')+'</small></button>').join('') : '<p class="fe">Nenhum ingresso guardado ainda.</p>';
-  const s = document.querySelector(".tixw summary"); if (s && tixList.length && !s.dataset.c){ s.dataset.c = 1; }
+  const tl = tixList.filter(t => t.kind !== 'map');
+  el.innerHTML = tl.length ? tl.sort((a,b) => (a.day||99)-(b.day||99)).map(t => '<button class="tixi" type="button" data-tixv="'+t.id+'"><span>🎫</span><b>'+esc(t.label)+'</b><small>'+(t.day?'Dia '+t.day+' · '+fmtDate(t.day):'Sem dia')+'</small></button>').join('') : '<p class="fe">Nenhum ingresso guardado ainda.</p>';
+  const s = document.querySelector(".tixw summary"); if (s && tl.length && !s.dataset.c){ s.dataset.c = 1; }
 }
-function tixForm(file){
-  window._tixFile = file;
-  openPop('<h3>🎫 Novo ingresso</h3><label class="tixlab">Nome<input id="tixN" maxlength="40" placeholder="Ex.: Ghibli Park, teamLab, Shinkansen"></label><label class="tixlab">Dia<select id="tixD"><option value="0">Sem dia</option>'+DATA.map((d,i) => '<option value="'+(i+1)+'">Dia '+(i+1)+' · '+esc(SHORT[i])+'</option>').join('')+'</select></label><button class="btn" type="button" data-tix="save">Guardar</button>');
-  const tn = tripDayToday(); if (tn) document.getElementById("tixD").value = tn;
+function tixForm(file, kind){
+  window._tixFile = file; window._tixKind = kind || 'tix';
+  openPop((kind === 'map' ? '<h3>🗺️ Novo mapa</h3><label class="tixlab">Nome<input id="tixN" maxlength="40" placeholder="Ex.: Colina da Juventude"></label>' : '<h3>🎫 Novo ingresso</h3><label class="tixlab">Nome<input id="tixN" maxlength="40" placeholder="Ex.: Ghibli Park, teamLab, Shinkansen"></label>')+'<label class="tixlab">Dia<select id="tixD"><option value="0">Sem dia</option>'+DATA.map((d,i) => '<option value="'+(i+1)+'">Dia '+(i+1)+' · '+esc(SHORT[i])+'</option>').join('')+'</select></label><button class="btn" type="button" data-tix="save">Guardar</button>');
+  const tn = kind === 'map' ? cur.day : tripDayToday(); if (tn > 0) document.getElementById("tixD").value = tn;
 }
 let wake = null;
 async function tixShow(ids, idx){
   tixView = {ids, idx}; const t = tixList.find(x => x.id === ids[idx]); if (!t) return;
   let ov = document.getElementById("tixO");
   if (!ov){ ov = document.createElement("div"); ov.id = "tixO"; ov.className = "tixo"; document.body.appendChild(ov); }
-  const url = URL.createObjectURL(t.blob);
-  ov.innerHTML = '<div class="tixh"><b>'+esc(t.label)+'</b><span>'+(t.day?'Dia '+t.day:'')+(ids.length>1?' · '+(idx+1)+' de '+ids.length:'')+'</span><button type="button" data-tix="close" aria-label="Fechar">✕</button></div><img src="'+url+'" alt="Ingresso: '+esc(t.label)+'"><p class="tixtip">Aumentem o brilho do celular ao máximo para a leitora ler o QR code.</p><div class="tixb">'+(ids.length>1?'<button type="button" data-tix="prev">‹ Anterior</button><button type="button" data-tix="next">Próximo ›</button>':'')+'<button type="button" data-tix="del" class="del">Apagar</button></div>';
-  ov.hidden = false; document.documentElement.classList.add("popopen");
-  try { if (navigator.wakeLock && !wake) wake = await navigator.wakeLock.request("screen"); } catch(e) {}
+  const url = URL.createObjectURL(t.blob); const isMap = t.kind === 'map';
+  ov.innerHTML = '<div class="tixh"><b>'+esc(t.label)+'</b><span>'+(t.day?'Dia '+t.day:'')+(ids.length>1?' · '+(idx+1)+' de '+ids.length:'')+'</span><button type="button" data-tix="close" aria-label="Fechar">✕</button></div>'+(isMap ? '<div class="mapsc"><img src="'+url+'" alt="Mapa: '+esc(t.label)+'" data-tix="zoom"></div><p class="tixtip">Toque no mapa para ampliar e arraste para navegar.</p>' : '<img src="'+url+'" alt="Ingresso: '+esc(t.label)+'"><p class="tixtip">Aumentem o brilho do celular ao máximo para a leitora ler o QR code.</p>')+'<div class="tixb">'+(ids.length>1?'<button type="button" data-tix="prev">‹ Anterior</button><button type="button" data-tix="next">Próximo ›</button>':'')+'<button type="button" data-tix="del" class="del">Apagar</button></div>';
+  ov.classList.remove("zoom"); ov.classList.toggle("ismap", isMap); ov.hidden = false; document.documentElement.classList.add("popopen");
+  try { if (navigator.wakeLock && !wake && !isMap) wake = await navigator.wakeLock.request("screen"); } catch(e) {}
 }
 function tixClose(){ const ov = document.getElementById("tixO"); if (!ov || ov.hidden) return false; ov.hidden = true; document.documentElement.classList.remove("popopen"); try { wake && wake.release(); } catch(e) {} wake = null; return true; }
 async function tixClick(e){
   const b = e.target.closest("[data-tix]"), v = e.target.closest("[data-tixv],[data-tixday]");
-  if (v){ await tixLoad(); const ids = v.dataset.tixday ? tixList.filter(t => t.day === +v.dataset.tixday).map(t => t.id) : [+v.dataset.tixv]; tixShow(ids, 0); return true; }
+  if (v){ await tixLoad(); const vt = v.dataset.tixv && tixList.find(t => t.id === +v.dataset.tixv); const ids = v.dataset.tixday ? tixList.filter(t => t.day === +v.dataset.tixday && t.kind !== 'map').map(t => t.id) : (vt && vt.kind === 'map' ? tixList.filter(t => t.kind === 'map' && t.day === vt.day).map(t => t.id) : [+v.dataset.tixv]); const ix = Math.max(0, ids.indexOf(+v.dataset.tixv)); tixShow(ids, ix); return true; }
   if (!b) return false;
   const a = b.dataset.tix;
   if (a === "add"){ const f = document.getElementById("tixF"); f.value = ""; f.click(); }
-  else if (a === "save"){ const lab = (document.getElementById("tixN").value || "Ingresso").trim(), day = +document.getElementById("tixD").value; await tixPut({label: lab, day, blob: window._tixFile, at: Date.now()}); closePop(); paintTix(); if (cur.day > 0) render(); toast("🎫 Ingresso guardado"); }
+  else if (a === "addmap"){ const f = document.getElementById("mapF"); f.value = ""; f.click(); }
+  else if (a === "zoom"){ const ov = document.getElementById("tixO"); ov.classList.toggle("zoom"); }
+  else if (a === "save"){ const lab = (document.getElementById("tixN").value || "Ingresso").trim(), day = +document.getElementById("tixD").value; const isMap = window._tixKind === 'map'; await tixPut({label: lab, day, blob: window._tixFile, at: Date.now(), kind: isMap ? 'map' : 'tix'}); closePop(); paintTix(); if (cur.day > 0) render(); toast(isMap ? "🗺️ Mapa guardado" : "🎫 Ingresso guardado"); }
   else if (a === "close") tixClose();
   else if (a === "prev" || a === "next"){ const {ids, idx} = tixView; tixShow(ids, (idx + (a === "next" ? 1 : ids.length - 1)) % ids.length); }
   else if (a === "del"){ if (b.dataset.armed){ const id = tixView.ids[tixView.idx]; await tixDel(id); tixClose(); paintTix(); if (cur.day > 0) render(); } else { b.dataset.armed = 1; b.textContent = "Toque de novo para apagar"; } }
   return true;
 }
-document.addEventListener("change", e => { if (e.target.id === "tixF" && e.target.files && e.target.files[0]) tixForm(e.target.files[0]); });
+document.addEventListener("change", e => { if (e.target.id === "tixF" && e.target.files && e.target.files[0]) tixForm(e.target.files[0]); if (e.target.id === "mapF" && e.target.files && e.target.files[0]) tixForm(e.target.files[0], 'map'); });
 function renderFavs(){
   const keys = Object.keys(favSt).filter(k => favSt[k]);
   let h = '<section class="favs" aria-labelledby="favT"><div class="fh"><h2 id="favT">⭐ Favoritos</h2><span>'+keys.length+'</span></div>';
@@ -1394,7 +1415,7 @@ function renderOverview(){
   if (tn) h += '</details>';
   h += emergHtml();
   document.getElementById("app").innerHTML = h;
-  if (tn){ paintDep(); tixLoad().then(() => { const el = document.getElementById("tixDay"); const c = tixList.filter(t => t.day === tn).length; if (el && cur.day === 0 && c) el.innerHTML = '<button class="tixday" type="button" data-tixday="'+tn+'">🎫 Ingressos de hoje ('+c+')</button>'; }); }
+  if (tn){ paintDep(); tixLoad().then(() => { const el = document.getElementById("tixDay"); const c = tixList.filter(t => t.day === tn && t.kind !== 'map').length; if (el && cur.day === 0 && c) el.innerHTML = '<button class="tixday" type="button" data-tixday="'+tn+'">🎫 Ingressos de hoje ('+c+')</button>'; }); }
   offlineStatus();
   tickClocks();
 }
@@ -1419,7 +1440,7 @@ function renderDay(){
     h += '</div>';
   }
   h += routeLinks(p.stops);
-  if (EXTRA.planb[n]) h += '<div style="margin-top:10px">'+panel('☔', 'Plano B de chuva ou neve', '<p>'+esc(EXTRA.planb[n])+'</p>')+(SNOW[n]?snowPanel(n):'')+photoPanel(n)+(EXTRA.dphr[n]?panel('💬', 'Frases do dia', EXTRA.dphr[n].map(x => '<div class="ph"><span class="j" lang="ja">'+esc(x[0])+favBtn('p|'+x[0])+'</span><button class="say" type="button" data-say="'+esc(x[0])+'" aria-label="Ouvir: '+esc(x[2])+'">'+ICON_SPK+'</button><span class="r">'+esc(x[1])+'</span><span class="t">'+esc(x[2])+'</span></div>').join('')):'')+(EXTRA.extras[n]?panel('➕', 'Se sobrar tempo', EXTRA.extras[n].map(x => '<div class="xt"><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span></div>').join('')):'')+'</div>';
+  if (EXTRA.planb[n]) h += '<div style="margin-top:10px">'+panel('☔', 'Plano B de chuva ou neve', '<p>'+esc(EXTRA.planb[n])+'</p>')+(SNOW[n]?snowPanel(n):'')+photoPanel(n)+mapPanel(n)+(EXTRA.dphr[n]?panel('💬', 'Frases do dia', EXTRA.dphr[n].map(x => '<div class="ph"><span class="j" lang="ja">'+esc(x[0])+favBtn('p|'+x[0])+'</span><button class="say" type="button" data-say="'+esc(x[0])+'" aria-label="Ouvir: '+esc(x[2])+'">'+ICON_SPK+'</button><span class="r">'+esc(x[1])+'</span><span class="t">'+esc(x[2])+'</span></div>').join('')):'')+(EXTRA.extras[n]?panel('➕', 'Se sobrar tempo', EXTRA.extras[n].map(x => '<div class="xt"><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span></div>').join('')):'')+'</div>';
   h += '<div class="progress"><span id="progTxt">'+done+' de '+total+' vistas</span><span class="bar" aria-hidden="true"><i id="progBar" style="width:'+(total?Math.round(done/total*100):0)+'%"></i></span></div>';
   const RW = EXTRA.rush[n], rushSeg = [];
   if (RW) p.stops.forEach((s,i) => {
@@ -1459,7 +1480,7 @@ function renderDay(){
   document.getElementById("app").innerHTML = h;
   paintPhotos();
   loadDayPhotos(n).then(() => { if (cur.day===n) paintPhotos(); });
-  loadWeather(n); if (n === 9) loadTide(); tixLoad().then(() => { const el = document.getElementById("tixDay"); const c = tixList.filter(t => t.day === n).length; if (el && cur.day === n && c) el.innerHTML = '<button class="tixday" type="button" data-tixday="'+n+'">🎫 Ingressos de hoje ('+c+')</button>'; });
+  loadWeather(n); if (n === 9) loadTide(); tixLoad().then(() => { const el = document.getElementById("tixDay"); const c = tixList.filter(t => t.day === n && t.kind !== 'map').length; paintMaps(n); if (el && cur.day === n && c) el.innerHTML = '<button class="tixday" type="button" data-tixday="'+n+'">🎫 Ingressos de hoje ('+c+')</button>'; });
   markNext(); updateLed();
 }
 
